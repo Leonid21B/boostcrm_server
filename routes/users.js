@@ -15,7 +15,7 @@ router.delete('/delete_invited_worker/:id/:selectedWorkerId', controller.deleteI
 router.get('/invitelink/:link', controller.invite)
 router.post('/update_user', controller.updateUser)
 router.post('/update_user_password', controller.updateUserPassword)
-router.post('/rebuild_user_password', controller.rebuildUserPassword)
+router.post('/rebuild_user_password', controller.rebuildUserPassword) 
 router.post('/update_user_comand', controller.updateUserComand)
 router.get('/get_user_info/:userId', controller.getUserInfo)
 router.get('/get_worker_info/:userId', controller.getWorkerInfo)
