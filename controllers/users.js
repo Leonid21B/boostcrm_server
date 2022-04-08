@@ -119,7 +119,6 @@ class UserController {
   }
   async rebuildUserPassword (req, res) {
     try {
-      console.log(req.body.email)
       const userInfo = await userService.rebuildUserPassword(req.body.email)
       return res.json(userInfo)
     } catch (error) {
