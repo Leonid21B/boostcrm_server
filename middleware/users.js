@@ -566,7 +566,7 @@ async rebuildUserPassword (email) {
         status: 200,
       }
     } catch (error) {
-      console.log(`updateUserPassword`, error)
+      console.log(`rebUserPassword`, error)
     }
   }
 
@@ -674,6 +674,7 @@ async rebuildUserPassword (email) {
           }
 
           fs.unlinkSync(`${process.env.FILE_STATIC_PATH}/avatars/${user.avatar}`)
+          console.log(12214421)
           await User.findOneAndUpdate(
             { _id: user._id },
             {
@@ -686,6 +687,10 @@ async rebuildUserPassword (email) {
           const updateUser = await User.findById(user._id)
           return new UserDto(updateUser)
         })
+      }
+      
+      if(user.avatar != '' && fs.existsSync(`${process.env.FILE_STATIC_PATH}/avatars/${user.avatar}`)){
+        fs.unlinkSync(`${process.env.FILE_STATIC_PATH}/avatars/${user.avatar}`)    
       }
       return new UserDto({ ...user, avatar: '' })
     } catch (error) {
