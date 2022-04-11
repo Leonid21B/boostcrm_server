@@ -9,7 +9,7 @@ router.post('/login', controller.login)
 router.post('/logout', controller.logout)
 router.get('/activatedlink/:link', controller.activation)
 router.get('/refresh', controller.refresh)
-
+router.put('/change_currency', controller.changeCurrency)
 router.post('/send_invite', controller.sendInvite)
 router.delete('/delete_invited_worker/:id/:selectedWorkerId', controller.deleteInvitedWorker)
 router.get('/invitelink/:link', controller.invite)

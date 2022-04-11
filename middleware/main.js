@@ -84,7 +84,8 @@ class MainService {
       successes: 1,
       refusals: 1,
       comments: 1,
-      comandId: 1
+      comandId: 1,
+      currency: 1,
     }).lean()
 
     const comands = await CommandOfSale.find({ companyId: user.companyId }).populate('users').lean()

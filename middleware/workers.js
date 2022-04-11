@@ -4,7 +4,7 @@ import { mailService } from './mail.js'
 import { hash } from 'bcrypt'
 import { v1 } from 'uuid'
 
-class WorkerService {
+class WorkerService { 
   async sendInviteLink ({ email, userId }) {
     try {
       const inviteLink = v1()

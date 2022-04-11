@@ -17,6 +17,7 @@ const UserSchema = new Schema({
 
   avatar: { type: String, default: '' },
 
+  currency:{ type: Number, default: 80}, 
   clients: [{ type: SchemaTypes.ObjectId, ref: 'Client' }],
   cards: [{ type: SchemaTypes.ObjectId, ref: 'Card' }],
   successes: [{ type: SchemaTypes.ObjectId, ref: 'Success' }],

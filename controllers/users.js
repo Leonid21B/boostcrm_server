@@ -13,6 +13,7 @@ class UserController {
   async login (req, res, next) {
     try {
       const user = await userService.login(req.body)
+      conasole.log(user)
       res.cookie('refreshToken', user.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
       return res.json(user)
     } catch (error) {
@@ -85,6 +86,7 @@ class UserController {
   async getUserInfo (req, res) {
     try {
       const userInfo = await userService.getUserInfo(req.params)
+      console.log(userInfo)
       return res.json(userInfo)
     } catch (error) {
       console.log(`getUserInfo`, error)
@@ -94,6 +96,7 @@ class UserController {
   async getWorkerInfo (req, res) {
     try {
       const userInfo = await userService.getWorkerInfo(req.params)
+      console.log(userInfo) 
       return res.json(userInfo)
     } catch (error) {
       console.log(`getWorkerInfo`, error)
@@ -108,7 +111,14 @@ class UserController {
       console.log(`getWorkerInfo`, error)
     }
   }
-
+  async changeCurrency (req,res) {
+    try {
+      const userInfo = await userService.changeCurrency(req.body)
+      return res.json(userInfo)
+    } catch (error) {
+      console.log(`changeCur`, error)
+    }
+  }
   async updateUserPassword (req, res) {
     try {
       const userInfo = await userService.updateUserPassword(req.body)

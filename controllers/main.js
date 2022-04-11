@@ -12,6 +12,7 @@ class MainController {
 
   async getUserProfile (req, res) {
     const data = await mainService.getUserProfile(req.params)
+    console.log(data)
     return res.json(data)
   }
 

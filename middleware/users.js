@@ -683,7 +683,7 @@ async rebuildUserPassword (email) {
               }
             },
             { new: true }
-          )
+          )  
           const updateUser = await User.findById(user._id)
           return new UserDto(updateUser)
         })
@@ -706,6 +706,12 @@ async rebuildUserPassword (email) {
         ? `Перезвонить ${user.tel}`
         : `Написать мне на почту ${user.email}`
     )
+    return true
+  }
+  async changeCurrency ({id,currency}) {
+    console.log(id,currency)
+    const user = await User.findOneAndUpdate({_id:id},{currency:currency},{new:true})
+    console.log(user)
     return true
   }
 

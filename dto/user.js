@@ -14,6 +14,7 @@ export default class User {
   cards
   tasks
   clients
+  currency
   successes
   refusals
   comments
@@ -35,6 +36,7 @@ export default class User {
       this.tasks = model.tasks
       this.clients = model.clients
       this.comandId = model.comandId
+      this.currency = model.currency
       this.comments = model.comments
       this.successes = model.successes
       this.refusals = model.refusals
