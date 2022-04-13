@@ -13,7 +13,7 @@ router.get('/card_history/:id', controller.getCardHistory)
 router.post('/create_comment', controller.createCardComment)
 router.put('/cart_update', controller.updateCart)
 router.delete('/cart/:id/:userId', controller.deleteCart)
-
+router.delete('/cart/delete_file/:cardId/:fileName',controller.deleteFile)
 router.put('/cart_update_stage', controller.updateCartStage)
 router.put('/cart_update_worker', controller.updateCartWorker)
 router.put('/cart_update_status', controller.updateCardStatus)

@@ -5,7 +5,7 @@ import { Company } from '../models/company.js'
 import { Stage } from '../models/stage.js'
 import { User } from '../models/user.js'
 import HistoryDto from '../dto/history.js'
-import fs from 'fs'
+import fs, { existsSync } from 'fs'
 import { v1 } from 'uuid'
 import { sortCards, isSpaceInteger, takeSpace } from './utils.js'
 
@@ -643,6 +643,53 @@ class CardService {
       }
     )
     return card
+  }
+  async deleteFile ({cardId, fileName }) {
+
+    const fullPath = `${process.env.FILE_STATIC_PATH}/files`
+    if (!fs.existsSync(fullPath)) {
+      fs.mkdirSync(fullPath)
+    }
+
+    const card = await Card.findOne({_id:cardId})
+    
+    console.log(fileName)
+    let history = card.history
+    history = history.filter(item => item.title != fileName)
+    console.log(history)
+    const newCard = await Card.findOneAndUpdate(
+      { _id: cardId },
+      {
+        $set: {
+          history: history
+        }
+      },
+      { new: true }
+    ).populate('workers').populate('tasks').populate('fields').populate({ path: 'tasks', populate: { path: 'workers' } })
+
+    const user = await User.findOne({_id:card.userId})
+
+    const companySpace = await Company.findById(user.companyId, { space: 1, takenSpace: 1 })
+    let newWeigth = companySpace.takenSpace
+    console.log(companySpace)
+    if(fs.existsSync(`${fullPath}/${fileName}`)){
+      fs.stat(`${fullPath}/${fileName}`, async (err,stats) => {
+        const s = stats.size/1024/8 
+        newWeigth = newWeigth - s
+      })
+
+      await Company.findOneAndUpdate(
+        { _id: user.companyId },
+        {
+          $set: {
+            takenSpace: newWeigth
+          }
+        }
+      )
+      fs.unlinkSync(`${fullPath}/${fileName}`)
+    }
+      
+    return newCard
   }
 }
 

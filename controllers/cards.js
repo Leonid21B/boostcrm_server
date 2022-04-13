@@ -106,6 +106,12 @@ class CardControler {
     const resp = await cardService.uploadFile({ file, cardId, userId })
     return res.json(resp)
   }
+  async deleteFile (req, res) {
+    const { cardId, fileName } = req.params
+
+    const resp = await cardService.deleteFile({ cardId, fileName })
+    return res.json(resp)
+  }
 }
 
 export default CardControler
