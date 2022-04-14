@@ -78,10 +78,10 @@ class UserService {
 
       const client = await Client.create(
         {
-          name: 'Name',
-          tel: 'Phone number',
-          org: 'Company',
-          email: 'E-mail',
+          name: 'Иван',
+          tel: '+7 (999) 999 99 99',
+          org: 'Стройматериалы',
+          email: 'qwert@mail.ru',
           userId: user._id,
           companyId: user.companyId,
           comandId: comand._id
