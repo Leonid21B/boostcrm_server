@@ -71,7 +71,7 @@ class UserService {
       const tokens = await tokenService.generateToken({ ...userdto })
 
       tokenService.saveToken(userdto.id, tokens.refreshToken)
-
+ 
       const stage = await Stage.create(
         { title: 'Первичный контакт', userId: userdto.id, companyId: company._id }
       )
@@ -656,6 +656,7 @@ async rebuildUserPassword (email) {
   async deleteUserAvatar (userId) {
     try {
       const user = await User.findById(userId).lean()
+      const companySpace = await Company.findById(user.companyId, { space: 1, takenSpace: 1 })
 
       if (user.avatar.length) {
         fs.access(`${process.env.FILE_STATIC_PATH}/avatars/${user.avatar}.jpg`, async function (err) {
@@ -688,8 +689,22 @@ async rebuildUserPassword (email) {
           return new UserDto(updateUser)
         })
       }
-      
+      let weight = 0
       if(user.avatar != '' && fs.existsSync(`${process.env.FILE_STATIC_PATH}/avatars/${user.avatar}`)){
+        fs.stat(`${process.env.FILE_STATIC_PATH}/avatars/${user.avatar}`,(err,stat) => {
+          if(stat.size){
+            weight = stat.size / 1024 
+          }
+        })
+        await Company.findOneAndUpdate(
+          { _id: user.companyId },
+          {
+            $set: {
+              takenSpace: takeSpace(companySpace['takenSpace'], -1 * weight)
+            }
+          },
+          { new: true }
+        )
         fs.unlinkSync(`${process.env.FILE_STATIC_PATH}/avatars/${user.avatar}`)    
       }
       return new UserDto({ ...user, avatar: '' })
