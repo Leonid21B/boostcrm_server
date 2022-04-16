@@ -96,6 +96,32 @@ class ClientService {
 
   async getAll (userId, limit, page) {
     const user = await User.findById(userId).lean()
+    const count = await Client.count({ companyId: user.companyId })
+    if(page * limit - count >= limit){
+        const companySpace = await Company.findById(user.companyId, { space: 1, takenSpace: 1 })
+
+        const clients = await (await Client.find({ companyId: user.companyId }).limit(limit * 1).skip((page - 1) * limit)).reverse()
+        const cards = await Card.find({ companyId: user.companyId }).lean()
+        const success = cards.filter(card => card.status === 'success') 
+        const refusual = cards.filter(card => card.status === 'refusual')
+        let notDeal = []
+        for(let card of clients){
+          if(card.flag == 0){
+            notDeal.push(card)
+            console.log(card)
+          }
+          
+      }
+        return {
+        clients: [],
+        clientsLength: 0,
+        success ,
+        refusual ,
+        notDeal ,
+        space: companySpace.space,
+        takenSpace: isSpaceInteger(companySpace.takenSpace)
+      }
+    }
     const clients = await (await Client.find({ companyId: user.companyId }).limit(limit * 1).skip((page - 1) * limit)).reverse()
 
     const clientsLength = await Client.find({ companyId: user.companyId }).count()
