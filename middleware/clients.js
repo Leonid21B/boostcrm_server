@@ -93,7 +93,13 @@ class ClientService {
       takenSpace: isSpaceInteger(companyResultSpace.takenSpace)
     }
   } 
-
+  async getAllClients (userId) {
+    const user = await User.findById(userId).lean()
+    const clients = await Client.find({companyId: user.companyId})
+    return{
+      clients
+    }
+  }
   async getAll (userId, limit, page) {
     const user = await User.findById(userId).lean()
     const count = await Client.count({ companyId: user.companyId })

@@ -15,6 +15,10 @@ class ClientController {
     const users = await clientService.getAll(userId, limit, page)
     return res.json(users)
   }
+  async getAllClients (req, res) {
+    const users = await clientService.getAllClients(req.params.userId)
+    return res.json(users)
+  }
   async remove (req, res) {
     const users = await clientService.remove(req.params)
     return res.json(users)

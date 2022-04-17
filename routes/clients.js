@@ -8,6 +8,7 @@ const router = Router()
 
 router.post('/create_client', controller.create)
 router.get('/clients/:userId', controller.getClients)
+router.get('/clients_get_all/:userId', controller.getAllClients)    
 router.delete('/client/:id/:userId', controller.remove)
 router.get('/current_client/:id', controller.getCurrent)
 router.put('/update_client', controller.updateClient)
