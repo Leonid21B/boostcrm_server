@@ -673,10 +673,10 @@ class CardService {
     let newWeigth = companySpace.takenSpace
     console.log(companySpace)
     if(fs.existsSync(`${fullPath}/${fileName}`)){
-      fs.stat(`${fullPath}/${fileName}`, async (err,stats) => {
-        const s = stats.size/1024/8 
-        newWeigth = newWeigth - s
-      })
+      const stat = fs.statSync(`${fullPath}/${fileName}`)
+      console.log(newWeigth)
+      newWeigth -= stat.size / 1024
+      console.log(newWeigth)
 
       await Company.findOneAndUpdate(
         { _id: user.companyId },

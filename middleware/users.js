@@ -625,7 +625,6 @@ async rebuildUserPassword (email) {
       file.mv(`${fullPath}/${avatar}`)
 
       const companySpace = await Company.findById(user.companyId, { space: 1, takenSpace: 1 })
-
       const updatedUser = await User.findOneAndUpdate(
         { _id: user._id },
         {
@@ -657,7 +656,7 @@ async rebuildUserPassword (email) {
     try {
       const user = await User.findById(userId).lean()
       const companySpace = await Company.findById(user.companyId, { space: 1, takenSpace: 1 })
-
+      console.log(companySpace)
       if (user.avatar.length) {
         fs.access(`${process.env.FILE_STATIC_PATH}/avatars/${user.avatar}.jpg`, async function (err) {
           if (err) {
@@ -691,12 +690,9 @@ async rebuildUserPassword (email) {
       }
       let weight = 0
       if(user.avatar != '' && fs.existsSync(`${process.env.FILE_STATIC_PATH}/avatars/${user.avatar}`)){
-        fs.stat(`${process.env.FILE_STATIC_PATH}/avatars/${user.avatar}`,(err,stat) => {
-          if(stat.size){
-            weight = stat.size / 1024 
-          }
-        })
-        await Company.findOneAndUpdate(
+        const stat = fs.statSync(`${process.env.FILE_STATIC_PATH}/avatars/${user.avatar}`)
+        weight = stat.size / 1024
+        const comp = await Company.findOneAndUpdate(
           { _id: user.companyId },
           {
             $set: {
