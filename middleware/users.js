@@ -90,7 +90,7 @@ class UserService {
 
       const card = await Card.create(
         {
-          title: 'Cart title',
+          title: 'Новая сделка',
           company: client.org,
           name: client.name,
           price: 100,
@@ -472,6 +472,8 @@ class UserService {
 
   async getUserInfo ({ userId }) {
     try {
+      const company = await Company.findById(user.companyId)
+      
       const userInfo = await User.findById(userId)
         .populate('clients')
         .populate('cards')

@@ -619,7 +619,8 @@ class CardService {
         name: user.fio,
         title: resultFile,
         helper: 'download',
-        date: new Date().toLocaleDateString('ru-RU', { weekday: 'short', hour: 'numeric', minute: 'numeric' })
+        date: new Date().toLocaleDateString('ru-RU', { weekday: 'short', hour: 'numeric', minute: 'numeric' }),
+        deleted :false,
       }
     )
 
@@ -645,34 +646,31 @@ class CardService {
     return card
   }
   async deleteFile ({cardId, fileName }) {
+      let newCard = await Card.findOne({_id:cardId})
+      const fullPath = `${process.env.FILE_STATIC_PATH}/files`
+      if (!fs.existsSync(fullPath)) {
+        fs.mkdirSync(fullPath)
+      }
+      if(fs.existsSync(`${fullPath}/${fileName}`)){
+      const card = await Card.findOne({_id: cardId})
+      
+      let history = card.history
 
-    const fullPath = `${process.env.FILE_STATIC_PATH}/files`
-    if (!fs.existsSync(fullPath)) {
-      fs.mkdirSync(fullPath)
-    }
+      let historyItem = history.filter(item => item.title == fileName)[0]
+      historyItem.deleted = true
+      historyItem.date = new Date().toLocaleDateString('ru-RU', { weekday: 'short', hour: 'numeric', minute: 'numeric' })
+      history = history.filter(item => item.title != fileName)
+      history.push(historyItem)
 
-    const card = await Card.findOne({_id:cardId})
+      newCard = await Card.findOneAndUpdate({_id: cardId},{history:history},{new:true})
+
+      console.log(newCard)
+      const user = await User.findOne({_id:card.userId})
+
+      const companySpace = await Company.findById(user.companyId, { space: 1, takenSpace: 1 })
+      let newWeigth = companySpace.takenSpace
+      console.log(companySpace)
     
-    console.log(fileName)
-    let history = card.history
-    history = history.filter(item => item.title != fileName)
-    console.log(history)
-    const newCard = await Card.findOneAndUpdate(
-      { _id: cardId },
-      {
-        $set: {
-          history: history
-        }
-      },
-      { new: true }
-    ).populate('workers').populate('tasks').populate('fields').populate({ path: 'tasks', populate: { path: 'workers' } })
-
-    const user = await User.findOne({_id:card.userId})
-
-    const companySpace = await Company.findById(user.companyId, { space: 1, takenSpace: 1 })
-    let newWeigth = companySpace.takenSpace
-    console.log(companySpace)
-    if(fs.existsSync(`${fullPath}/${fileName}`)){
       const stat = fs.statSync(`${fullPath}/${fileName}`)
       console.log(newWeigth)
       newWeigth -= stat.size / 1024

@@ -3,7 +3,6 @@ import { tokenService } from './tokens.js'
 export default function (req, res, next) {
   try {
     const autorizHeader = req.headers.authorization
-
     if (!autorizHeader) {
       // return {msg:"autorizHeader not exists"}
       throw new Error('autorizHeader not exists')

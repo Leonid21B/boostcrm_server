@@ -253,7 +253,7 @@ class ClientService {
 
       const card = await Card.create(
         {
-          title: 'Card Title',
+          title: 'Новая сделка',
           name: name,
           company: org,
           tel: tel,

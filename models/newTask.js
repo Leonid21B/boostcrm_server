@@ -12,7 +12,7 @@ const NewtaskSchema = new Schema({
   // userId:{type:Schema.Types.ObjectId,ref:'user'},
   userId: { type: SchemaTypes.ObjectId, ref: 'User' },
   workers: [{ type: SchemaTypes.ObjectId, ref: 'User' }],
-
+  deleted: { type: Boolean },
   clientId: { type: Schema.Types.ObjectId, ref: 'Client' },
   companyId: { type: Schema.Types.ObjectId, ref: 'Company' },
   comandId: { type: Schema.Types.ObjectId, ref: 'ComandOfSale' }
