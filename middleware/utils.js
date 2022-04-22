@@ -2,8 +2,8 @@ const isSpaceInteger = space =>
   Number.isInteger(Math.floor(space / 1024)) ? Math.floor(space / 1024) : 0
 
 const takeSpace = (space, unit) => {
-  console.log(unit)
-  space + unit}
+  return space + unit
+}
 
 const sortCards = (first, second) => first.createdAt > second.createdAt ? 1 : -1
 
