@@ -176,7 +176,15 @@ class UserController {
 
   async updateRole (req, res) {
     try {
-      const resp = await userService.updateRole(req.body)
+      const resp = await userService.updateRole(req.body) 
+      return res.json(resp)
+    } catch (error) {
+      console.log(`update role`, error)
+    }
+  }
+  async changeRole (req, res) {
+    try {
+      const resp = await userService.changeRole(req.body) 
       return res.json(resp)
     } catch (error) {
       console.log(`update role`, error)

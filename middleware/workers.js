@@ -8,8 +8,9 @@ class WorkerService {
   async sendInviteLink ({ email, userId }) {
     try {
       const inviteLink = v1()
-
+ 
       const password = this.generatePassword(10)
+      console.log(password)
       const hashedPasswrod = await hash(password, 5)
 
       await mailService.sendInvite(email, password, `${process.env.SITE_URL}/api/invitelink/${inviteLink}`)

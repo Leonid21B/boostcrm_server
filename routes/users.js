@@ -23,5 +23,6 @@ router.post('/upload_user_avatar/:id', controller.uploadUserAvatar)
 router.delete('/delete_user_avatar/:id', controller.deleteUserAvatar)
 router.post('/send_statement', controller.sendStatement)
 router.put('/update_role', controller.updateRole)
+router.put('/change_role', controller.changeRole)
 
 export default router

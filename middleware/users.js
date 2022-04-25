@@ -728,6 +728,18 @@ async rebuildUserPassword (email) {
     return true
   }
 
+ async changeRole({adminId, userId}){
+  let admin = await User.findById(adminId)
+  let user = await User.findById(userId)
+  console.log(user.role,admin.role)
+  if(user.role === 'user' && admin.role === 'admin'){
+    user = await User.findOneAndUpdate({_id : userId},{role:'admin'},{new: true})
+    user = await User.findOneAndUpdate({_id : adminId},{role:'user'},{new: true})
+    return true
+  }
+  return false
+ }
+
   async updateRole ({ userId, workerId, role }) {
     try {
       const user = await User.findById(workerId)
