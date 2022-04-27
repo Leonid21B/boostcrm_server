@@ -13,11 +13,11 @@ class UserController {
   async login (req, res, next) {
     try {
       const user = await userService.login(req.body)
-      conasole.log(user)
+      console.log(user)
       res.cookie('refreshToken', user.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
       return res.json(user)
     } catch (error) {
-
+      console.log(error)
     }
   }
 
@@ -54,7 +54,7 @@ class UserController {
       await userService.activateLink(activationlink)
       return res.redirect(process.env.CLIENT_URL)
     } catch (error) {
-      console.log(`activation`, error)
+      console.log(`activation`, error) 
     }
   }
   async sendInvite (req, res, next) {
