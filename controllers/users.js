@@ -52,7 +52,7 @@ class UserController {
     try {
       const activationlink = req.params.link
       await userService.activateLink(activationlink)
-      return res.redirect(process.env.CLIENT_URL)
+      return res.redirect(`${process.env.CLIENT_URL}/popup`)
     } catch (error) {
       console.log(`activation`, error) 
     }
@@ -77,7 +77,7 @@ class UserController {
     try {
       const activationlink = req.params.link
       await userService.clicknviteLink(activationlink)
-      return res.redirect(process.env.CLIENT_URL)
+      return res.redirect(`${process.env.CLIENT_URL}/popup`)
     } catch (error) {
       console.log(`invite`, error)
     }

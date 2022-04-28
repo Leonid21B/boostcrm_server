@@ -42,7 +42,8 @@ app.use('/api/checkPayment', async function (req, res, next) {
 
   console.log('user', user)
   if (!user) {
-    return res.redirect(process.env.CLIENT_URL)
+    console.log(`${process.env.CLIENT_URL}/popup`)
+    return res.redirect(`${process.env.CLIENT_URL}/popup`)
   }
 
   const isPayid = req.body.object

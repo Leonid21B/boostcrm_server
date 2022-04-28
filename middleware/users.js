@@ -62,7 +62,7 @@ class UserService {
           comandId: comand._id
         }
       )
-
+      console.log(`${process.env.SITE_URL}/api/activatedlink/${genActivationLink}`)
       mailService.sendLink(email, password, `${process.env.SITE_URL}/api/activatedlink/${genActivationLink}`)
       // console.log(password)
       // console.log(`${process.env.SITE_URL}/api/activatedlink/${genActivationLink}`)
