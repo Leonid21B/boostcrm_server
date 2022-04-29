@@ -47,10 +47,10 @@ app.use('/api/checkPayment', async function (req, res, next) {
   }
 
   const isPayid = req.body.object
-  const now = new Date()
   const company = Company.findOne({_id: user.companyId})
-  const paymentDateEnd = company.paymentDate
-  paymentDateEnd.setDate(paymentDateEnd.getDate() + 30)
+  const paymentDateEnd = new Date(company.paymentDate)
+  
+  paymentDateEnd.setDate(paymentDateEnd.getMonth() + 1)
   console.log(paymentDateEnd.getDate())
   console.log('paymentDateEnd', paymentDateEnd)
 
