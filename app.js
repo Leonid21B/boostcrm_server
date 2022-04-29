@@ -43,20 +43,21 @@ app.use('/api/checkPayment', async function (req, res, next) {
   console.log('user', user)
   if (!user) {
     console.log(`${process.env.CLIENT_URL}/popup`)
-    return res.redirect(`${process.env.CLIENT_URL}/popup`)
+    return res.redirect(`${process.env.CLIENT_URL}`)
   }
 
   const isPayid = req.body.object
   const now = new Date()
-  const paymentDateEnd = new Date(now)
+  const company = Company.findOne({_id: user.companyId})
+  const paymentDateEnd = company.paymentDate
   paymentDateEnd.setDate(paymentDateEnd.getDate() + 30)
-
+  console.log(paymentDateEnd.getDate())
   console.log('paymentDateEnd', paymentDateEnd)
 
   if (user._id === userId && isPayid.paid) {
     await Company.findOneAndUpdate(
       { _id: user.companyId },
-      {
+      { 
         $set: {
           space: user.requestedSpace,
           paymentDate: paymentDateEnd

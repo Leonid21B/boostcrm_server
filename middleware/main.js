@@ -650,11 +650,11 @@ class MainService {
       await User.findOneAndUpdate(
         { _id: ObjectId(userId) },
         { requestedSpace: space },
-        { new: true }
+        { new: true } 
       )
 
       console.log('first', data)
-      return data.confirmation.confirmation_url
+      return data
     } catch (error) {
       console.log(`paymentSystemGenerateRequest error`, error)
     }

@@ -54,7 +54,7 @@ class MainController {
   async paymentSystemGenerateRequest (req, res) {
     const {userId, sum, isAuto, space} = req.params
     const data = await mainService.paymentSystemGenerateRequest(userId, sum, isAuto, space)
-    return res.json(data)
+    return res.json(data.confirmation.confirmation_url)
   }
 }
 

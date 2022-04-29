@@ -15,7 +15,7 @@ class StageService {
       const companyResultSpace = await Company.findOneAndUpdate(
         { _id: user.companyId },
         {
-          $addToSet: {
+          $addToSet: { 
             'stages': stage
           },
           $set: {

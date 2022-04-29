@@ -82,7 +82,6 @@ class UserController {
       console.log(`invite`, error)
     }
   }
-
   async getUserInfo (req, res) {
     try {
       const userInfo = await userService.getUserInfo(req.params)
