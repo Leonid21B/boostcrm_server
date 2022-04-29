@@ -380,6 +380,17 @@ class ClientService {
       const unit = file.size / 1024
 
       console.log('uploadedData.length', uploadData.length)
+      if(companySpace.space - companySpace.takenSpace > 500 && companySpace.space - unit < 500){
+        await sendTarifSize('boostcrm.ru', 500, user.email)
+      }
+
+      if(companySpace.space - companySpace.takenSpace > 100 && companySpace.space - unit < 100){
+        await sendTarifSize('boostcrm.ru', 100, user.email)
+      }
+
+      if(companySpace.space - companySpace.takenSpace > 10 && companySpace.space - unit < 10){
+        await sendTarifSize('boostcrm.ru', 10, user.email)
+      }
 
       await Company.findOneAndUpdate(
         { _id: user.companyId },
@@ -390,7 +401,7 @@ class ClientService {
         },
         { new: true }
       )
-
+      
       const companyResultSpace = await Company.findById(user.companyId, { space: 1, takenSpace: 1 })
       const result = uploadData.length > 0
       if (result) {

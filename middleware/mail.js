@@ -80,6 +80,21 @@ class MailService {
             `
     })
   }
+  async sendTarifSize (from, size,emailUs){
+    await this.trasporter.sendMail({
+      from: from,
+      to: emailUs,
+      subject: 'Help',
+      html:
+                `
+                <div>
+                    <h1 style="color:#73AAFC;text-transform: uppercase;word-spacing: 10px;">У вас заканчивается память</h1>
+                    <p style="font-family: Nunito Sans;font-weight: 400;font-size: 20px;line-height: 24px;color: #333342;">Осталось ${size}}
+                    </p>
+                </div>
+            `
+    })
+  }
 }
 
 export const mailService = new MailService()
