@@ -55,7 +55,7 @@ app.use('/api/checkPayment', async function (req, res, next) {
   paymentDateEnd.setMonth(paymentDateEnd.getMonth() + 1)
   console.log('paymentDateEnd', paymentDateEnd)
   console.log(req.body)
-  if (user._id === userId && isPayid.paid) {
+  if (user.id === userId && isPayid.paid) {
     await Company.findOneAndUpdate(
       { _id: user.companyId },
       { 
@@ -66,7 +66,7 @@ app.use('/api/checkPayment', async function (req, res, next) {
       },
       { new: true }
     )
-    next()
+    return
     console.log('user gb', user.requestedSpace)
   } else {
     console.log('i dont pay')
