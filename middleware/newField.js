@@ -57,38 +57,13 @@ class NewFieldService {
     return fields
   }
 
-  async update ({ cardId, fieldId, val, userId }) {
-    const user = await User.findById(userId).lean()
-    const field = await Field.findById(fieldId).lean()
-
-    const history = new HistoryDto(
-      {
-        id: v1(),
-        name: user.fio,
-        title: `${field.value} на ${val}`,
-        helper: 'update-field',
-        date: new Date()
-          .toLocaleDateString('ru-RU', { weekday: 'short', hour: 'numeric', minute: 'numeric' })
-      }
-    )
-    await Field.findByIdAndUpdate(fieldId, { value: val }, { new: true })
-    await Card.findOneAndUpdate(
-      { _id: cardId },
-      {
-        $addToSet: {
-          'history': history
-        }
-      },
-      { new: true }
-    )
-    const card = await Card.findById(cardId)
-      .populate('tasks')
-      .populate('workers')
-      .populate('fields')
-      .populate({ path: 'tasks', populate: { path: 'workers' } })
-      .lean()
-
-    return card
+  async update ({ userId, fields }) {
+    console.log(userId,fields)
+    const user = await User.findById(userId)
+    let company = await Company.findById(user.companyId).lean()
+    company = await Company.findByIdAndUpdate({_id:user.companyId},{fields:fields},{new:true})
+    console.log(company)
+    return company
   }
 }
 

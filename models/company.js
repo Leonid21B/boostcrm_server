@@ -10,6 +10,7 @@ const CompanySchema = new Schema({
   clients: [{ type: SchemaTypes.ObjectId, ref: 'Client' }],
   comandOfSale: [{ type: SchemaTypes.ObjectId, ref: 'ComandOfSale' }],
 
+  fields: {type: String, default: 'Ф.И.О|Организация|ИНН|Телефон|E-mail'},
   space: { type: Number, default: 0 },
   takenSpace: { type: Number, default: 0 },
   paymentDate: { type: Date, default: Date.now() }
