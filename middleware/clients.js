@@ -6,6 +6,7 @@ import { Stage } from '../models/stage.js'
 import { User } from '../models/user.js'
 import * as XLSX from 'xlsx'
 import { takeSpace, isSpaceInteger } from './utils.js'
+import { mailService } from './mail.js'
 
 class ClientService {
   async updateFlag(req,res){
@@ -380,16 +381,16 @@ class ClientService {
       const unit = file.size / 1024
 
       console.log('uploadedData.length', uploadData.length)
-      if(companySpace.space - companySpace.takenSpace > 500 && companySpace.space - unit < 500){
-        await sendTarifSize('boostcrm.ru', 500, user.email)
+      if(companySpace.space - companySpace.takenSpace > 500 && companySpace.space - unit - companySpace.takenSpace < 500){
+        await mailService.sendTarifSize(process.env.MAIL_USER, 500, user.email)
       }
 
-      if(companySpace.space - companySpace.takenSpace > 100 && companySpace.space - unit < 100){
-        await sendTarifSize('boostcrm.ru', 100, user.email)
+      if(companySpace.space - companySpace.takenSpace > 100 && companySpace.space - unit  - companySpace.takenSpace < 100){
+        await mailService.sendTarifSize(process.env.MAIL_USER, 100, user.email)
       }
 
-      if(companySpace.space - companySpace.takenSpace > 10 && companySpace.space - unit < 10){
-        await sendTarifSize('boostcrm.ru', 10, user.email)
+      if(companySpace.space - companySpace.takenSpace > 10 && companySpace.space - unit - companySpace.takenSpace < 10){
+        await mailService.sendTarifSize(process.env.MAIL_USER, 10, user.email)
       }
 
       await Company.findOneAndUpdate(

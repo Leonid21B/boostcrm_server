@@ -14,6 +14,7 @@ import commandsRouter from './routes/commands.js'
 import mainRouter from './routes/main.js'
 import { User } from './models/user.js'
 import { Company } from './models/company.js'
+import { checkDate } from './functions/checkDate.js'
 
 dotenv.config()
 
@@ -86,7 +87,11 @@ app.use('/api', mainRouter)
 const startServer = async () => {
   try {
     await mongoose.connect(process.env.DB_URI)
-    app.listen(PORT, () => { console.log(`Server started on ${PORT}`) })
+      setInterval(() => {
+        checkDate.check()
+      },1000 * 60 * 60 * 24)
+    app.listen(PORT, () => { 
+      console.log(`Server started on ${PORT}`) })
   } catch (e) {
     console.log('e', e)
   }

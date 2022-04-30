@@ -8,6 +8,7 @@ import HistoryDto from '../dto/history.js'
 import fs, { existsSync } from 'fs'
 import { v1 } from 'uuid'
 import { sortCards, isSpaceInteger, takeSpace } from './utils.js'
+import { mailService } from './mail.js'
 
 class CardService {
   async create ({ title, company, name, price, tel, email, address, stageId, userId, comandId }) {
@@ -602,9 +603,20 @@ class CardService {
         resultFile = `${v1()}.${file.mimetype.split('/').pop()}`
         break
     }
-
+    const user = await User.findById(userId)
     const fileSize = file.size / 1024
+    const companySpace = await Company.findById(user.companyId, { space: 1, takenSpace: 1 })
+    if(companySpace.space - companySpace.takenSpace > 500 && companySpace.space - fileSize - companySpace.takenSpace < 500){
+        await mailService.sendTarifSize(process.env.MAIL_USER, 500, user.email)
+      }
 
+      if(companySpace.space - companySpace.takenSpace > 100 && companySpace.space - fileSize- companySpace.takenSpace< 100){
+        await mailService.sendTarifSize(process.env.MAIL_USER, 100, user.email)
+      }
+
+      if(companySpace.space - companySpace.takenSpace > 10 && companySpace.space - fileSize - companySpace.takenSpace < 10){
+        await mailService.sendTarifSize(process.env.MAIL_USER, 10, user.email)
+      }
     const fullPath = `${process.env.FILE_STATIC_PATH}/files`
     if (!fs.existsSync(fullPath)) {
       fs.mkdirSync(fullPath)
@@ -612,7 +624,7 @@ class CardService {
 
     file.mv(`${fullPath}/${resultFile}`)
 
-    const user = await User.findById(userId)
+    
     const history = new HistoryDto(
       {
         id: v1(),
@@ -634,7 +646,7 @@ class CardService {
       { new: true }
     ).populate('workers').populate('tasks').populate('fields').populate({ path: 'tasks', populate: { path: 'workers' } })
 
-    const companySpace = await Company.findById(user.companyId, { space: 1, takenSpace: 1 })
+    
     await Company.findOneAndUpdate(
       { _id: user.companyId },
       {

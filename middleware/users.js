@@ -638,6 +638,17 @@ async rebuildUserPassword (email) {
       )
 
       const unit = file['size'] / 1024
+      if(companySpace.space - companySpace.takenSpace > 500 && companySpace.space - unit - companySpace.takenSpace < 500){
+        await mailService.sendTarifSize(process.env.MAIL_USER, 500, user.email)
+      }
+
+      if(companySpace.space - companySpace.takenSpace > 100 && companySpace.space - unit  - companySpace.takenSpace < 100){
+        await mailService.sendTarifSize(process.env.MAIL_USER, 100, user.email)
+      }
+
+      if(companySpace.space - companySpace.takenSpace > 10 && companySpace.space - unit - companySpace.takenSpace < 10){
+        await mailService.sendTarifSize(process.env.MAIL_USER, 10, user.email)
+      }
       await Company.findOneAndUpdate(
         { _id: user.companyId },
         {
