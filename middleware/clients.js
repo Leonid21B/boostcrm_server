@@ -371,6 +371,7 @@ class ClientService {
           iin: item['ИНН'],
           tel: item['Телефон'],
           email: item['E-mail'],
+          flag:0,
           userId: user._id,
           comandId: user.comandId,
           companyId: user.companyId
