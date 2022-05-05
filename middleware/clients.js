@@ -204,7 +204,9 @@ class ClientService {
   // not use
   async getCurrent ({ id }) {
     const client = await Client.findById(id).lean()
-    return client
+    console.log(client)
+    let workers = await User.find({companyId:client.companyId})
+    return {client,workers}
   }
 
   async update ({ id, name, org, iin, tel, email, userId }) {

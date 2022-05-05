@@ -13,8 +13,10 @@ import usersRouter from './routes/users.js'
 import commandsRouter from './routes/commands.js'
 import mainRouter from './routes/main.js'
 import { User } from './models/user.js'
+import companiesAdmin from './routes_admin/companiesAdmin.js'
 import { Company } from './models/company.js'
 import { checkDate } from './functions/checkDate.js'
+import authAdmin from './routes_admin/authAdmin.js'
 
 dotenv.config()
 
@@ -83,6 +85,9 @@ app.use('/api', clientsRouter)
 app.use('/api', usersRouter)
 app.use('/api', commandsRouter)
 app.use('/api', mainRouter)
+
+app.use('/admin',authAdmin)
+app.use('/admin',companiesAdmin)
 
 const startServer = async () => {
   try {
