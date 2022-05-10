@@ -204,7 +204,6 @@ class ClientService {
   // not use
   async getCurrent ({ id }) {
     const client = await Client.findById(id).lean()
-    console.log(client)
     let workers = await User.find({companyId:client.companyId})
     return {client,workers}
   }
@@ -352,27 +351,33 @@ class ClientService {
       const uploadData = []
 
       console.log(`File ${file.name} rows count: ${data.length}`)
+      const user = await User.findById(userId)
+      const company = await Company.findById(user.companyId)
+      console.log(user.companyId)
+      const keys = await company.fields.split('|')
 
-      // Check structure
-      const keys = ['Ф.И.О', 'Организация', 'ИНН', 'Телефон', 'E-mail']
+      console.log(keys)
+
       if (!data.length || !JSON.stringify(Object.keys(data[0]).sort()) === JSON.stringify(keys.sort())) {
         throw new Error('Invalid file')
       }
 
-      const user = await User.findById(userId)
+      
       const companyExists = {}
       // const emailExists = {}
       for (let i = 0; i < data.length; i++) {
-        const item = data[i]
+        console.log(data[i])
+        const item = Object.values(data[i])
+        console.log(item)
         if (companyExists[item['Организация']]) { // || emailExists[item['E-mail']]) {
           continue
         }
         uploadData.push({
-          name: item['Ф.И.О'],
-          org: item['Организация'],
-          iin: item['ИНН'],
-          tel: item['Телефон'],
-          email: item['E-mail'],
+          name: item[0],
+          org: item[1],
+          iin: item[2],
+          tel: item[3],
+          email: item[4],
           flag:0,
           userId: user._id,
           comandId: user.comandId,
