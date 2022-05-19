@@ -98,6 +98,86 @@ class CompaniesController{
       })
     }
   }
+  async getCompany(req,res){
+    try{
+      console.log(req.params.id)
+      let company = await Company.findById(req.params.id)
+      const users = await User.find({companyId:company._id})
+      company.users = users
+      console.log(company)
+      return res.json({
+        company
+      })
+    }catch(err){
+      console.log(err)
+      return res.json({company:null})
+    }
+  }
+  async changeAdmin(req,res){
+    try{
+      const user = await User.findById(req.params.userId)
+      const company = await Company.find({_id:user.companyId})
+      console.log(company[0])
+      console.log(company[0].id)
+      const admin = await User.find({companyId:company[0]._id, role:'admin'})
+      await User.findByIdAndUpdate(req.params.userId,{role:'admin'},{new:true})
+      await User.findByIdAndUpdate(admin[0].id,{role:'user'},{new:true})
+      return res.json(true)
+    }catch(err){
+      console.log(err)
+      return res.json(false)
+    }
+  }
+  async deleteUser(req,res){
+    try{
+      const user = await User.findById(req.params.userId)
+      if(user && user?.role == 'user'){
+        await User.findByIdAndDelete(req.params.userId)
+        let companyUsers = await Company.findOne({_id:user.companyId})
+        companyUsers = companyUsers.users.filter(item => item != req.params.userId)
+        await Company.findOneAndUpdate({_id:user.companyId},{users:companyUsers})
+        return res.json(true)
+      }
+      return res.json(false)
+    }catch(err){
+      console.log(err)
+      return res.json(false) 
+    }
+  }
+  async changePayDate(req,res) {
+    try{
+      const date = req.body.date
+      const companyId = req.body.companyId
+      await Company.findByIdAndUpdate(companyId, {paymentDate:date})
+      return res.json(true)
+    }catch(err) {
+      console.log(err)
+      return res.json(false)
+    }
+  }
+
+  async changePayDate(req,res) {
+    try{
+      const date = req.body.date
+      const companyId = req.body.companyId
+      await Company.findByIdAndUpdate(companyId, {paymentDate:date})
+      return res.json(true)
+    }catch(err) {
+      console.log(err)
+      return res.json(false)
+    }
+  }
+  async changeSpace(req,res) {
+    try{
+      console.log(req.body.companyId,req.body.newSpace)
+      const company = await Company.findByIdAndUpdate(req.body.companyId,{space:req.body.newSpace},{new:true})
+      console.log(company)
+      return res.json(true)
+    }catch(err){
+      console.log(err)
+      return res.json(false)
+    }
+  }
 }
 
 export default new CompaniesController()

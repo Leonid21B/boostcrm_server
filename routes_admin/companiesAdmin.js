@@ -5,5 +5,10 @@ const router = Router()
 
 router.get('/companies/:limit/:page',companiesController.getCompanies)
 router.post('/companies/search',companiesController.companySearch)
+router.post('/company/change_company_admin/:userId',companiesController.changeAdmin)
+router.delete('/company/delete_user/:userId',companiesController.deleteUser)
+router.get('/company/get_current_company/:id',companiesController.getCompany)
+router.put('/company/change_payment_date',companiesController.changePayDate)
+router.put('/company/change_space',companiesController.changeSpace)
 
 export default router
