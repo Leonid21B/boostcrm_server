@@ -86,8 +86,8 @@ app.use('/api', usersRouter)
 app.use('/api', commandsRouter)
 app.use('/api', mainRouter)
 
-app.use('/admin',authAdmin)
-app.use('/admin',companiesAdmin)
+app.use('/adminka',authAdmin)
+app.use('/adminka',companiesAdmin)
 
 const startServer = async () => {
   try {
