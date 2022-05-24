@@ -1,4 +1,6 @@
 import { userService } from '../middleware/users.js'
+import { tokenService } from '../middleware/tokens.js'
+ 
 
 class UserController {
   async registration (req, res, next) {
@@ -71,6 +73,16 @@ class UserController {
       return res.json(user)
     } catch (error) {
       console.log(`sendInvite`, error)
+    }
+  }
+  async getCompany(req,res,next){
+    try{
+      
+      const userData = tokenService.validateRefreshToken(req.cookies.refreshToken)
+      const company = await userService.getCompany(userData.id)
+      return res.json(company)
+    }catch(err){
+      console.log(err)
     }
   }
   async invite (req, res, next) {

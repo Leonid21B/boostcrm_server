@@ -469,7 +469,14 @@ class UserService {
       console.log(`refresh error`, error)
     }
   }
-
+  async getCompany(id){
+    const user = await User.findById(id)
+    const company = await Company.findOne({_id:user.companyId})
+    return{space:company.space,
+      takenSpace: company.takenSpace,
+      paymentDate:company.paymentDate
+    }
+  }
   async getUserInfo ({ userId }) {
     try {
       const company = await Company.findById(user.companyId)
