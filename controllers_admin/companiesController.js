@@ -33,7 +33,7 @@ const addAdmin = (obj,value) => {
     id: obj.id,
     admin: value,
     paymentDate: obj.paymentDate,
-    space: obj.space,
+    space: obj.space / 1024 > 1 ? obj.space /1024 : obj.space ,
     takenSpace: obj.takenSpace,
     createdAt: obj.createdAt,
   }
