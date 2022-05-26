@@ -574,6 +574,7 @@ class CardService {
   }
 
   async uploadFile ({ file, cardId, userId }) {
+    try{
     console.log('file', file)
 
     let resultFile = null
@@ -656,8 +657,12 @@ class CardService {
       }
     )
     return card
+    }catch(error){
+      console.log(error)
+    }
   }
   async deleteFile ({cardId, fileName }) {
+    try{
       let newCard = await Card.findOne({_id:cardId})
       const fullPath = `${process.env.FILE_STATIC_PATH}/files`
       if (!fs.existsSync(fullPath)) {
@@ -700,7 +705,11 @@ class CardService {
     }
       
     return newCard
+    }catch(error){
+      console.log(error)
+    }
   }
+  
 }
 
 export const cardService = new CardService()

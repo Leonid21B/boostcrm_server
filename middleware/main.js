@@ -68,6 +68,7 @@ class MainService {
   }
 
   async getUserProfile ({ userId }) {
+    try{
     const user = await User.findById(userId, {
       _id: 1,
       fio: 1,
@@ -98,9 +99,13 @@ class MainService {
       comands: comands,
       workers: workes
     }
+    }catch(error){
+      console.log(error)
+    }
   }
 
   async getAnaliticsInfo ({ userId }) {
+    try{
     const user = await User.findById(userId)
     if (user.role === 'admin') {
       const clients = await Client.find({ companyId: user.companyId }, { _id: 1 }).lean().count()
@@ -205,8 +210,10 @@ class MainService {
       successCards,
       refusualCards
     }
-  }
-
+  
+  }catch(error){
+      console.log(error)
+    }}
   async getCurrentAnaliticsInfo ({ comandId }) {
     const comandClietns = await Client.find({ comandId: comandId }, { _id: 1 }).count()
     const comandCards = await Card.find({ comandId: comandId })
@@ -224,6 +231,7 @@ class MainService {
   }
 
   async getCurrentUserCards ({ userId }) {
+    try{
     const user = await User.findById(userId, { _id: 1, fio: 1, companyId: 1 }).lean()
 
     const cards = await Card.find({ userId: user._id }).populate('tasks').populate('workers')
@@ -245,7 +253,10 @@ class MainService {
       takenSpace: isSpaceInteger(companySpace['takenSpace'])
     }
   }
-
+  catch(error){
+      console.log(error)
+    }
+  }
   async getCurrentComandCards ({ comandId }) {
     const comand = await CommandOfSale.findById(comandId, { _id: 1, companyId: 1 }).lean()
 
@@ -610,7 +621,8 @@ class MainService {
         tasks: tasks,
         fileds: fileds
       }
-    } catch (error) {
+    }
+     catch (error) {
       console.log(`getCurrentCardInfo error`, error)
     }
   }
