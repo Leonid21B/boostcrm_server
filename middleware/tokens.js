@@ -15,6 +15,7 @@ class TokenService {
       return userToken
     } catch (error) {
       console.log(`error validateAccessToken `, error)
+      return false
     }
   }
 

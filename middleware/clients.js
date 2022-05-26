@@ -51,7 +51,7 @@ class ClientService {
 
             },
             $set: {
-              takenSpace: takeSpace(companySpace.takenSpace, 10)
+              takenSpace: takeSpace(companySpace.takenSpace, 0.001)
             }
           },
           {
@@ -300,7 +300,7 @@ class ClientService {
                 cards: card
               },
               $set: {
-                takenSpace: takeSpace(companySpace.takenSpace, 10)
+                takenSpace: takeSpace(companySpace.takenSpace, 0.001)
               }
             },
             { new: true }
@@ -388,18 +388,18 @@ class ClientService {
       }
 
       const companySpace = await Company.findById(user.companyId, { space: 1, takenSpace: 1 })
-      const unit = file.size / 1024 /1024
+      const unit = file.size / 1024 /1024 / 1024
 
       console.log('uploadedData.length', uploadData.length)
-      if(companySpace.space - companySpace.takenSpace > 500/ 1024 && companySpace.space - unit - companySpace.takenSpace < 500/ 1024){
+      if(companySpace.space - companySpace.takenSpace > 500/ 1024 / 1024 / 1024 && companySpace.space - unit - companySpace.takenSpace < 500/ 1024 / 1024 / 1024){
         await mailService.sendTarifSize(process.env.MAIL_USER, 500/ 1024, user.email)
       }
 
-      if(companySpace.space - companySpace.takenSpace > 100/ 1024 && companySpace.space - unit  - companySpace.takenSpace < 100/ 1024){
+      if(companySpace.space - companySpace.takenSpace > 100/ 1024 / 1024 / 1024 && companySpace.space - unit  - companySpace.takenSpace < 100/ 1024 / 1024 / 1024){
         await mailService.sendTarifSize(process.env.MAIL_USER, 100/ 1024, user.email)
       }
 
-      if(companySpace.space - companySpace.takenSpace > 10/ 1024 && companySpace.space - unit - companySpace.takenSpace < 10/ 1024){
+      if(companySpace.space - companySpace.takenSpace > 10 / 1024 / 1024 / 1024 && companySpace.space - unit - companySpace.takenSpace < 10/ 1024 / 1024 / 1024){
         await mailService.sendTarifSize(process.env.MAIL_USER, 10, user.email)
       }
 

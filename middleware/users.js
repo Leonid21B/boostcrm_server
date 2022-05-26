@@ -473,7 +473,7 @@ class UserService {
     const user = await User.findById(id)
     const company = await Company.findOne({_id:user.companyId})
     return{space:company.space,
-      takenSpace: company.takenSpace,
+      takenSpace: Math.floor(company.takenSpace * 1000) / 1000,
       paymentDate:company.paymentDate
     }
   }
@@ -644,16 +644,16 @@ async rebuildUserPassword (email) {
         { new: true }
       )
 
-      const unit = file['size'] / 1024 /1024
-      if(companySpace.space - companySpace.takenSpace > 500/ 1024 && companySpace.space - unit - companySpace.takenSpace < 500/ 1024){
+      const unit = file['size'] / 1024 /1024 / 1024
+      if(companySpace.space - companySpace.takenSpace > 500/ 1024 / 1024 && companySpace.space - unit - companySpace.takenSpace < 500/ 1024/ 1024){
         await mailService.sendTarifSize(process.env.MAIL_USER, 500, user.email)
       }
 
-      if(companySpace.space - companySpace.takenSpace > 100/ 1024 && companySpace.space - unit  - companySpace.takenSpace < 100/ 1024){
+      if(companySpace.space - companySpace.takenSpace > 100/ 1024/ 1024 && companySpace.space - unit  - companySpace.takenSpace < 100/ 1024/ 1024){
         await mailService.sendTarifSize(process.env.MAIL_USER, 100, user.email)
       }
 
-      if(companySpace.space - companySpace.takenSpace > 10/ 1024 && companySpace.space - unit - companySpace.takenSpace < 10/ 1024){
+      if(companySpace.space - companySpace.takenSpace > 10/ 1024/ 1024 && companySpace.space - unit - companySpace.takenSpace < 10/ 1024/ 1024){
         await mailService.sendTarifSize(process.env.MAIL_USER, 10, user.email)
       }
       await Company.findOneAndUpdate(
@@ -711,7 +711,7 @@ async rebuildUserPassword (email) {
       let weight = 0
       if(user.avatar != '' && fs.existsSync(`${process.env.FILE_STATIC_PATH}/avatars/${user.avatar}`)){
         const stat = fs.statSync(`${process.env.FILE_STATIC_PATH}/avatars/${user.avatar}`)
-        weight = stat.size / 1024
+        weight = stat.size / 1024 / 1024 / 1024
         const comp = await Company.findOneAndUpdate(
           { _id: user.companyId },
           {

@@ -114,7 +114,7 @@ class CardService {
           { _id: user.companyId },
           {
             $set: {
-              takenSpace: takeSpace(companySpace['takenSpace'], 10 /1024)
+              takenSpace: takeSpace(companySpace['takenSpace'], 0.001)
             },
             $addToSet: {
               'cards': card
@@ -604,17 +604,17 @@ class CardService {
         break
     }
     const user = await User.findById(userId)
-    const fileSize = file.size / 1024 /1024
+    const fileSize = file.size / 1024 /1024 / 1024
     const companySpace = await Company.findById(user.companyId, { space: 1, takenSpace: 1 })
-    if(companySpace.space - companySpace.takenSpace > 500/ 1024 && companySpace.space - fileSize - companySpace.takenSpace < 500 /1024){
+    if(companySpace.space - companySpace.takenSpace > 500/ 1024 / 1024 / 1024 && companySpace.space - fileSize - companySpace.takenSpace < 500 /1024 / 1024 / 1024){
         await mailService.sendTarifSize(process.env.MAIL_USER, 500, user.email)
       }
 
-      if(companySpace.space - companySpace.takenSpace > 100/ 1024 && companySpace.space - fileSize- companySpace.takenSpace< 100/ 1024){
+      if(companySpace.space - companySpace.takenSpace > 100/ 1024 / 1024 / 1024 && companySpace.space - fileSize- companySpace.takenSpace< 100/ 1024 / 1024 / 1024 / 1024){
         await mailService.sendTarifSize(process.env.MAIL_USER, 100, user.email)
       }
 
-      if(companySpace.space - companySpace.takenSpace > 10/ 1024 && companySpace.space - fileSize - companySpace.takenSpace < 10/ 1024){
+      if(companySpace.space - companySpace.takenSpace > 10/ 1024 / 1024 / 1024 && companySpace.space - fileSize - companySpace.takenSpace < 10/ 1024 / 1024 / 1024){
         await mailService.sendTarifSize(process.env.MAIL_USER, 10, user.email)
       }
     const fullPath = `${process.env.FILE_STATIC_PATH}/files`
@@ -685,7 +685,7 @@ class CardService {
     
       const stat = fs.statSync(`${fullPath}/${fileName}`)
       console.log(newWeigth)
-      newWeigth -= stat.size / 1024 / 1024
+      newWeigth -= stat.size / 1024 / 1024 / 1024
       console.log(newWeigth)
 
       await Company.findOneAndUpdate(

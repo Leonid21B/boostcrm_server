@@ -49,7 +49,7 @@ class NewTaskService {
         { _id: user.companyId },
         {
           $set: {
-            takenSpace: takeSpace(companySpace['takenSpace'], 10)
+            takenSpace: takeSpace(companySpace['takenSpace'], 0.001)
           }
         },
         { new: true }
