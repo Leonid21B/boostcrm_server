@@ -77,13 +77,8 @@ class UserController {
   }
   async getCompany(req,res,next){
     try{
-      let userData = tokenService.validateAccessToken(req.body.refresh)
-      console.log(userData)
-      if(!userData){
-        userData = tokenService.validateRefreshToken(req.cookies.refreshToken)
-      }
-      console.log(userData)
-      const company = await userService.getCompany(userData.id)
+      
+      const company = await userService.getCompany(req.params.userId)
       return res.json(company)
     }catch(err){
       console.log(err)
