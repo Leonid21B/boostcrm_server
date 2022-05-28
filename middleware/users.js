@@ -471,10 +471,17 @@ class UserService {
   }
   async getCompany(id){
     const user = await User.findById(id)
-    const company = await Company.findOne({_id:user.companyId})
-    return{space:company.space,
-      takenSpace: Math.floor(company.takenSpace * 1000) / 1000,
-      paymentDate:company.paymentDate
+    if (user){
+      const company = await Company.findOne({_id:user.companyId})
+      return{space:company.space,
+        takenSpace: Math.floor(company.takenSpace * 1000) / 1000,
+        paymentDate:company.paymentDate
+      }
+    }else{
+      return{space : 1,
+        takenSpace: 0.5,
+        paymentDate: (new Date()).setTime((new Date()).getTime() + 1000 * 3600 * 24 * 5).toString()
+      }
     }
   }
   async getUserInfo ({ userId }) {

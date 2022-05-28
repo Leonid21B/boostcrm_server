@@ -19,7 +19,7 @@ class StageService {
             'stages': stage
           },
           $set: {
-            takenSpace: takeSpace(companySpace['takenSpace'], 10)
+            takenSpace: takeSpace(companySpace['takenSpace'], 0.001)
           }
         },
         {
