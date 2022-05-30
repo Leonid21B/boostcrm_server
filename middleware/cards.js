@@ -247,9 +247,11 @@ class CardService {
   async delete ({ id, userId }) {
     try {
       const user = await User.findById(userId).lean()
-
+      
       const deletedCard = await Card.findById(id).lean()
-
+      const company = await Company.findOne({_id:user.companyId})
+      await Company.findOneAndUpdate({_id:user.companyId},{takenSpace:takeSpace(company.takenSpace,-deletedCard.tasks.length * 0.001)})
+      console.log(deletedCard)
       await Card.deleteOne({ _id: deletedCard._id })
 
       Promise.all(
