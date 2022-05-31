@@ -349,10 +349,19 @@ class ClientService {
       const data = XLSX.utils.sheet_to_json(workSheet)
       console.log('data.length', data.length)
       const uploadData = []
-
-      console.log(`File ${file.name} rows count: ${data.length}`)
       const user = await User.findById(userId)
       const company = await Company.findById(user.companyId)
+      if(data.length > 10000){
+        const clients = await Client.find({ companyId: user.companyId }).limit(20)
+        return {
+          space:company.space,
+          result: 3,
+          clients:clients,
+          takenSpace :company.takenSpace
+        }
+       }
+      console.log(`File ${file.name} rows count: ${data.length}`)
+      
       console.log(user.companyId)
       const keys = await company.fields.split('|')
 
