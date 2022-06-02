@@ -1,10 +1,10 @@
-const isSpaceInteger = space => Math.floor(space * 1000 / 1024 ) / 1000
+const isSpaceInteger = space => Math.floor(space * 1000) / 1000
 
 const takeSpace = (space, unit) => {
   if (space + unit < 0){
     return 0
   }
-  return Math.floor((space + unit) * 1000) / 1000
+  return Math.round((space + unit) * 1000) / 1000
 }
 
 const sortCards = (first, second) => first.createdAt > second.createdAt ? 1 : -1

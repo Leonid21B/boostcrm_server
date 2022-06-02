@@ -104,7 +104,7 @@ class CardService {
 
       const companySpace = await Company.findById(user.companyId, { space: 1, takenSpace: 1 }).lean()
 
-      Promise.all([
+      await Promise.all([
         User.updateOne(
           { _id: user._id },
           { $addToSet: { 'cards': card } },
@@ -151,8 +151,9 @@ class CardService {
         .lean()
 
       const companyResultSpace = await Company.findById(user.companyId, { space: 1, takenSpace: 1 }).lean()
+      console.log(companyResultSpace['takenSpace'])
       const takenSpace = isSpaceInteger(companyResultSpace['takenSpace'])
-
+      console.log(takenSpace)
       return {
         resultCard,
         space: companyResultSpace['space'],
@@ -237,7 +238,7 @@ class CardService {
   // not use
   async getCardHistory ({ id }) {
     try {
-      const cart = await Card.findById(id).lean().then(card => card.history)
+      const cart = await Card.findById(id).lean().then(card => card?.history)
       return cart
     } catch (e) {
       console.log(`cart service get one`, e)
@@ -250,11 +251,11 @@ class CardService {
       
       const deletedCard = await Card.findById(id).lean()
       const company = await Company.findOne({_id:user.companyId})
-      await Company.findOneAndUpdate({_id:user.companyId},{takenSpace:takeSpace(company.takenSpace,-deletedCard.tasks.length * 0.001)})
-      console.log(deletedCard)
+      await Company.findOneAndUpdate({_id:user.companyId},{takenSpace:takeSpace(company.takenSpace,-deletedCard.tasks.length * 0.001 - 0.001)})
+     
       await Card.deleteOne({ _id: deletedCard._id })
 
-      Promise.all(
+      await Promise.all(
         [
           User.updateOne(
             { _id: userId },
