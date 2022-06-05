@@ -178,6 +178,28 @@ class CompaniesController{
       return res.json(false)
     }
   }
+  async getAll(req,res){
+    try{
+      const companies = await Company.find({})
+      let numb = companies.length
+      let numbCurrent  = companies.filter(it => new Date(it.paymentDate) > new Date()).length
+      let allTakenSpace = 0
+      let allBuySpace = 0
+      console.log(companies)
+      for (let comp in companies){
+        allTakenSpace += companies[comp].takenSpace
+        allBuySpace += companies[comp].space
+      }
+      return res.json({
+        numb,
+        allBuySpace,
+        allTakenSpace,
+        numbCurrent,
+      })
+    }catch(err){
+      console.log(err)
+    }
+  }
 }
 
 export default new CompaniesController()

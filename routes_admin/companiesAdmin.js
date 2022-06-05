@@ -10,5 +10,6 @@ router.delete('/company/delete_user/:userId',companiesController.deleteUser)
 router.get('/company/get_current_company/:id',companiesController.getCompany)
 router.put('/company/change_payment_date',companiesController.changePayDate)
 router.put('/company/change_space',companiesController.changeSpace)
+router.get('/companies/get_all_data',companiesController.getAll)
 
 export default router
