@@ -63,7 +63,7 @@ app.use('/api/checkPayment', async function (req, res, next) {
       { _id: user.companyId },
       { 
         $set: {
-          space: requestedSpace / 1024 > 1 ? user.requestedSpace / 1024 : user.requestedSpace,
+          space: user.requestedSpace / 1024 > 1 ? user.requestedSpace / 1024 : user.requestedSpace,
           paymentDate: paymentDateEnd
         }
       },
