@@ -10,7 +10,8 @@ const userDto = (user,company) => {
       paymentDate:company.paymentDate,
     },
     email:user.email,
-    fio: user.fio
+    fio: user.fio,
+    tel:user.tel,
   }
 }
 const toUP = (str) => {
@@ -183,6 +184,7 @@ class CompaniesController{
       const companies = await Company.find({})
       let numb = companies.length
       let numbCurrent  = companies.filter(it => new Date(it.paymentDate) > new Date()).length
+      let probClients =  companies.filter(it => new Date(it.paymentDate).getMonth() - new Date(it.createdAt).getMonth() <= 1).length
       let allTakenSpace = 0
       let allBuySpace = 0
       console.log(companies)
@@ -191,6 +193,7 @@ class CompaniesController{
         allBuySpace += companies[comp].space
       }
       return res.json({
+        probClients,
         numb,
         allBuySpace,
         allTakenSpace,
