@@ -362,7 +362,6 @@ class ClientService {
        }
       console.log(`File ${file.name} rows count: ${data.length}`)
       
-      console.log(user.companyId)
       const keys = await company.fields.split('|')
 
       console.log(keys)
@@ -378,9 +377,9 @@ class ClientService {
         console.log(data[i])
         const item = Object.values(data[i])
         console.log(item)
-        if (companyExists[item['Организация']]) { // || emailExists[item['E-mail']]) {
+        {/*if (companyExists[item['Организация']]) { // || emailExists[item['E-mail']]) {
           continue
-        }
+        }*/}
         uploadData.push({
           name: item[0],
           org: item[1],
@@ -399,7 +398,6 @@ class ClientService {
       const companySpace = await Company.findById(user.companyId, { space: 1, takenSpace: 1 })
       const unit = file.size / 1024 /1024 / 1024
 
-      console.log('uploadedData.length', uploadData.length)
       if(companySpace.space - companySpace.takenSpace > 500/ 1024 / 1024 / 1024 && companySpace.space - unit - companySpace.takenSpace < 500/ 1024 / 1024 / 1024){
         await mailService.sendTarifSize(process.env.MAIL_USER, 500/ 1024, user.email)
       }
@@ -423,9 +421,10 @@ class ClientService {
       )
       
       const companyResultSpace = await Company.findById(user.companyId, { space: 1, takenSpace: 1 })
-      const result = uploadData.length > 0
-      if (result) {
-        await Client.insertMany(uploadData)
+      const result = uploadData.length 
+      console.log(result)
+      if (result > 0) {
+        await Client.insertMany([...uploadData])
       }
 
       const clients = await Client.find({ companyId: user.companyId }).limit(20)
