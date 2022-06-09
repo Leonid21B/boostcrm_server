@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer'
 class MailService {
   constructor () {
     this.trasporter = nodemailer.createTransport({
-      host: 'smtp.yandex.ru',
+      host: 'smtp.boostcrm.ru',
       port: '587',
       secure: false,
       auth: {
@@ -16,7 +16,7 @@ class MailService {
   async sendLink (userEmail, password, link) {
     if(link){
       return this.trasporter.sendMail({
-        from: 'BOOSTCRM',
+        from: 'support@boostcrm.ru',
         to: userEmail,
         subject: 'Confirm Email',
         html:
@@ -30,7 +30,7 @@ class MailService {
       })
     }else{
       return this.trasporter.sendMail({
-        from: 'BOOSTCRM',
+        from: 'support@boostcrm.ru',
         to: userEmail,
         subject: 'Confirm Email',
         html:
@@ -47,7 +47,7 @@ class MailService {
   async sendInvite (userEmail, password, link) {
     console.log(`link`, link)
     const sendInviteLink = await this.trasporter.sendMail({
-      from: process.env.MAIL_USER,
+      from: 'support@boostcrm.ru',
       to: userEmail,
       subject: 'Confirm invite',
       html:
@@ -65,7 +65,7 @@ class MailService {
 
   async sendStatement (from, thema, comment, type) {
     await this.trasporter.sendMail({
-      from: from,
+      from: 'support@boostcrm.ru',
       to: 'gamletfan@gmail.com',
       subject: 'Help',
       html:
@@ -81,7 +81,7 @@ class MailService {
   }
   async sendTarifSize (from, size,emailUs){
     await this.trasporter.sendMail({
-      from: from,
+      from: 'support@boostcrm.ru',
       to: emailUs,
       subject: 'Help',
       html:
@@ -96,7 +96,7 @@ class MailService {
   }
   async sendTarifTime (from, time, emailUs){
     await this.trasporter.sendMail({
-      from: from,
+      from: 'support@boostcrm.ru',
       to: emailUs,
       subject: 'Help',
       html:
