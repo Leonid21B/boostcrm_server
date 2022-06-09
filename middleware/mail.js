@@ -3,12 +3,12 @@ import nodemailer from 'nodemailer'
 class MailService {
   constructor () {
     this.trasporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
+      host: 'smtp.boostcrm.ru',
       port: '587',
       secure: false,
       auth: {
-        user: 'accforworkfoboostcrm@gmail.com',
-        pass: 'fnHHyhC-n2tH8_v'
+        user: 'support@boostcrm.ru',
+        pass: 'Antony2103951314'
 
       }
     })
