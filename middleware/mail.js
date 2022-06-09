@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer'
 class MailService {
   constructor () {
     this.trasporter = nodemailer.createTransport({
-      host: 'smtp.boostcrm.ru',
+      host: 'smtp.yandex.ru',
       port: '587',
       secure: false,
       auth: {
