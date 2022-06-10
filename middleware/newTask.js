@@ -199,7 +199,8 @@ class NewTaskService {
     try {
       const user = await User.findById(userId).lean()
       const deletedTask = await newTask.findById(id).lean()
-
+      const company = await Company.findOne({_id : user.companyId})
+      const resCompany = await Company.findOneAndUpdate({_id : user.companyId},{takenSpace:takeSpace(company.takenSpace,-0.001)})
       const historyDto = new HistoryDto(
         {
           id: v1(),
@@ -230,7 +231,7 @@ class NewTaskService {
         .populate({ path: 'tasks', populate: { path: 'workers' } })
         .lean()
 
-      return updatedCard
+      return {updatedCard,takenSpace:resCompany.takenSpace}
     } catch (e) {
       console.log(`closeTask`, e)
     }

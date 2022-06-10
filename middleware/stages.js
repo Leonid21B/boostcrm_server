@@ -90,8 +90,11 @@ class StageService {
 
       const stage = await Stage.findById(id).lean()
       const newStage = await Stage.findOne({ _id: transferto }).lean()
-
+      const company = await Company.findOne({_id:stage.companyId})
+      const resCompany = await Company.findOneAndUpdate({_id:stage.companyId},{takenSpace:takeSpace(company.takenSpace,-0.001)},{new:true})
       await Stage.deleteOne({ _id: stage._id })
+      const cardsWithStage = await Card.find({stageId : stage._id})
+      if (cardsWithStage.length){
       await Card.updateMany(
         { stageId: stage._id },
         {
@@ -100,7 +103,10 @@ class StageService {
           }
         },
         { new: true }
-      )
+      )}
+      return {
+        takenSpace :resCompany.takenSpace 
+      }
     } catch (e) {
       console.log(`delete satge servece`, e)
     }

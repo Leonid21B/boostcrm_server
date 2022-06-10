@@ -252,7 +252,6 @@ class CardService {
       const deletedCard = await Card.findById(id).lean()
       const company = await Company.findOne({_id:user.companyId})
       await Company.findOneAndUpdate({_id:user.companyId},{takenSpace:takeSpace(company.takenSpace,-deletedCard.tasks.length * 0.001 - 0.001)})
-     
       await Card.deleteOne({ _id: deletedCard._id })
 
       await Promise.all(
