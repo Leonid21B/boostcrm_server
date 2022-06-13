@@ -63,18 +63,18 @@ app.use('/api/checkPayment', async function (req, res, next) {
       { _id: user.companyId },
       { 
         $set: {
-          space: user.requestedSpace / 1024 > 1 ? user.requestedSpace / 1024 : user.requestedSpace,
+          space: user.requestedSpace / 1024 > 1 ? Math.floor(user.requestedSpace / 1024) : user.requestedSpace,
           paymentDate: paymentDateEnd
         }
       },
       { new: true }
     )
-    return
-    console.log('user gb', user.requestedSpace)
+    return res.redirect(`${process.env.CLIENT_URL}`)
   } else {
     console.log('i dont pay')
-    next()
+    return res.redirect(`${process.env.CLIENT_URL}`)
   }
+  return res.redirect(`${process.env.CLIENT_URL}`)
 })
 
 app.use('/api', cardsRouter)
