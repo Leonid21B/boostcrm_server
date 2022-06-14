@@ -17,6 +17,13 @@ import companiesAdmin from './routes_admin/companiesAdmin.js'
 import { Company } from './models/company.js'
 import { checkDate } from './functions/checkDate.js'
 import authAdmin from './routes_admin/authAdmin.js'
+import { Token } from './models/token.js'
+import { newTask } from './models/newTask.js'
+import { Stage } from './models/stage.js'
+import { Field } from './models/newField.js'
+import { CommandOfSale } from './models/commandOfSale.js'
+import { Client } from './models/client.js'
+import { Card } from './models/card.js'
 
 dotenv.config()
 
@@ -36,7 +43,18 @@ app.use(cookieParser())
 
 app.use('/avatars', express.static(`${process.env.FILE_STATIC_PATH}\\avatars`))
 app.use('/files', express.static(`${process.env.FILE_STATIC_PATH}\\files`))
-
+app.use('/api/delete_data_base',async function(req,res){
+  await Company.deleteMany()
+  await User.deleteMany()
+  await Token.deleteMany()
+  await newTask.deleteMany()
+  await Stage.deleteMany()
+  await Field.deleteMany()
+  await CommandOfSale.deleteMany()
+  await Client.deleteMany()
+  await Card.deleteMany()
+  return
+})
 app.use('/api/checkPayment', async function (req, res, next) {
   console.log('req.card', req.body)
   const userId = req.body.object.description.split('|')[0]
