@@ -43,7 +43,7 @@ app.use(cookieParser())
 
 app.use('/avatars', express.static(`${process.env.FILE_STATIC_PATH}\\avatars`))
 app.use('/files', express.static(`${process.env.FILE_STATIC_PATH}\\files`))
-app.use('/api/delete_data_base',async function(req,res){
+/*app.use('/api/delete_data_base',async function(req,res){
   await Company.deleteMany()
   await User.deleteMany()
   await Token.deleteMany()
@@ -55,7 +55,7 @@ app.use('/api/delete_data_base',async function(req,res){
   await Card.deleteMany()
   console.log('deleted')
   return
-})
+})*/
 app.use('/api/checkPayment', async function (req, res, next) {
   console.log('req.card', req.body)
   const userId = req.body.object.description.split('|')[0]
