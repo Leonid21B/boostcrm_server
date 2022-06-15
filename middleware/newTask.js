@@ -130,8 +130,30 @@ class NewTaskService {
   async deleteTask ({ id, cardId }) {
     try {
       const task = await newTask.findById(id)
-
+      const user = await User.findOne({_id:task.userId})
+      const history = new HistoryDto(
+        {
+          id: v1(),
+          name: user.fio,
+          title: `${task.title}`,
+          helper: 'task',
+          status:'deleted',
+          deleted:true,
+          date: new Date()
+            .toLocaleDateString('ru-RU', { weekday: 'short', hour: 'numeric', minute: 'numeric' })
+        }
+      )
+      
       await newTask.findByIdAndDelete(id)
+      console.log(history)
+      await Card.findOneAndUpdate(
+        { _id: cardId },
+        {
+          $addToSet: {
+            history: history
+        }
+        }
+      )
       await Card.findOneAndUpdate(
         { _id: cardId },
         {
@@ -140,7 +162,8 @@ class NewTaskService {
           }
         }
       )
-      return true
+      const company = await Card.findOne({_id: cardId})
+      return company
     } catch (e) {
       console.log(`deleteTask`, e)
     }
