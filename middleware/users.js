@@ -196,9 +196,9 @@ class UserService {
       const whoInviteWorker = await User.findById(userId)
       const user = await User.create(
         {
-          fio: 'YOR NAME',
+          fio: 'Иванов Василий Васильевич',
           email: email,
-          tel: 'YOUR PHONE',
+          tel: '+7 (987) 654 32 10',
           password: hashedPasswrod,
           activationlink: inviteLink,
           role: 'user',
