@@ -162,11 +162,14 @@ class ClientService {
   }
 
   async remove ({ id, userId }) {
+    try{
+    if(!id){
+      return {status:false}
+    }
     const deletedClient = await Client.findById(id).lean()
-    const user = await User.findById(userId).lean()
-
     await Client.findByIdAndDelete(id)
-
+    const user = await User.findById(userId).lean()
+    const company = await Company.findOne({_id: user.companyId})
     Promise.all(
       [
         User.findOneAndUpdate(
@@ -196,9 +199,21 @@ class ClientService {
             }
           },
           { new: true }
+        ),
+        Company.findOneAndUpdate(
+          { _id: user.companyId },
+          {
+            takenSpace:takeSpace(company.takenSpace,-0.001)
+          },
+          { new: true }
         )
       ]
     )
+    return {status:true, space : takeSpace(company.takenSpace,-0.001)}
+    }catch(err) {
+      console.log(err)
+      return {status:false}
+    }
   }
 
   // not use
