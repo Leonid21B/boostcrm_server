@@ -1,8 +1,41 @@
 import { mailService } from "../middleware/mail.js"
+import { Card } from "../models/card.js"
+import { Client } from "../models/client.js"
+import { CommandOfSale } from "../models/commandOfSale.js"
 import { Company } from "../models/company.js"
+import { newTask } from "../models/newTask.js"
+import { Stage } from "../models/stage.js"
 import {User} from "../models/user.js"
 
 class CheckDate {
+  async checkProb(){
+    try{
+      const companies = await Company.find()
+      let filtCompanies = companies.filter(it => {
+        const dateAdd = new Date(it.createdAt)
+        const dateNow = new Date()
+        const datePaym = new Date(it.paymentDate)
+        if(datePaym.getTime() - dateAdd.getTime() <= 1000 * 60 * 60 * 11 * 24  && datePaym.getTime() - dateNow.getTime() < 0){
+          return true
+        }else{
+          return false
+        }
+      })
+
+      for(let it in filtCompanies){
+        const user = await User.find({_id:filtCompanies[it].userId})
+        await Company.deleteOne({_id:filtCompanies[it]._id})
+        await Client.deleteMany({userId:user._id})
+        await Card.deleteMany({userId:user._id})
+        await CommandOfSale.deleteMany({userId:user._id})
+        await newTask.deleteMany({userId:user._id})
+        await Stage.deleteMany({userId:user._id})
+        await User.deleteMany({companyId:filtCompanies[it]._id})
+      }
+    }catch(err){
+      console.log(err)
+    }
+  }
   async check(){
     const users = await User.find({})
     for(let user of users){

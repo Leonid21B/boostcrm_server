@@ -113,6 +113,7 @@ const startServer = async () => {
     await mongoose.connect(process.env.DB_URI)
       setInterval(() => {
         checkDate.check()
+        checkDate.checkProb()
       },1000 * 60 * 60 * 24)
     app.listen(PORT, () => { 
       console.log(`Server started on ${PORT}`) })
