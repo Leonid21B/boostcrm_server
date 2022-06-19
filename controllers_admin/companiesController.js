@@ -46,7 +46,7 @@ class CompaniesController{
       const limit = req.params.limit
       const page = req.params.page
       const companiesAll = await Company.find({})
-      const sortedByDate = companiesAll.sort((a,b) => {a.createdAt - b.createdAt})
+      const sortedByDate = companiesAll.sort((a,b) => {a.paymentDate - b.paymentDate})
       const sortedByClients  = companiesAll.sort((a,b) => {a.clients.length - b.clients.length})
       let resDate = [...sortedByDate.slice((page-1) * limit,page * limit)]
       for (let it in resDate){
