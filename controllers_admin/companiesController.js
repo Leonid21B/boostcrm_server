@@ -1,4 +1,11 @@
+import { CancellationToken } from "mongodb";
+import { Card } from "../models/card.js";
+import { Client } from "../models/client.js";
+import { CommandOfSale } from "../models/commandOfSale.js";
 import { Company } from "../models/company.js";
+import { Field } from "../models/newField.js";
+import { newTask } from "../models/newTask.js";
+import { Stage } from "../models/stage.js";
 import { User } from "../models/user.js";
 
 const userDto = (user,company) => {
@@ -174,6 +181,25 @@ class CompaniesController{
       console.log(req.body.companyId,req.body.newSpace)
       const company = await Company.findByIdAndUpdate(req.body.companyId,{space:req.body.newSpace},{new:true})
       console.log(company)
+      return res.json(true)
+    }catch(err){
+      console.log(err)
+      return res.json(false)
+    }
+  }
+  async deleteCurrent(req,res){
+    try{
+      console.log(req.params.companyId)
+      const company = await Company.findById(req.params.companyId)
+      const idComp = company._id
+      await Card.deleteMany({companyId:idComp})
+      await Client.deleteMany({companyId:idComp})
+      await CommandOfSale.deleteMany({companyId:idComp})
+      await Field.deleteMany({companyId:idComp})
+      await Stage.deleteMany({companyId:idComp})
+      await newTask.deleteMany({companyId:idComp})
+      await User.deleteMany({companyId:idComp})
+      await Company.findByIdAndDelete(req.params.companyId)
       return res.json(true)
     }catch(err){
       console.log(err)
