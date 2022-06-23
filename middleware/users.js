@@ -738,6 +738,7 @@ async rebuildUserPassword (email) {
 
   async sendStatement ({ title, comment, typeOfMethod, userId }) {
     const user = await User.findById(userId)
+    console.log(title,comment)
     await mailService.sendStatement(
       user.email, title, comment,
       typeOfMethod === 1

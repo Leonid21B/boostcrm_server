@@ -57,8 +57,9 @@ class CompaniesController{
       for (let it in resClients){
         const user = await User.findOne({companyId:resClients[it].id, role:'admin'})
         resClients[it] = addAdmin(resClients[it], user)
-        console.log(resClients)
+        
       }
+      console.log(resDate)
       return res.json({
         resDate,
         resClients

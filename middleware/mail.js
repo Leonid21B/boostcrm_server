@@ -66,7 +66,7 @@ class MailService {
   async sendStatement (from, thema, comment, type) {
     await this.trasporter.sendMail({
       from: 'support@boostcrm.ru',
-      to: 'gamletfan@gmail.com',
+      to: 'antonthegod@yandex.ru',
       subject: 'Help',
       html:
                 `
