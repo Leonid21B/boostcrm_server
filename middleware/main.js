@@ -281,6 +281,7 @@ class MainService {
   }
 
   async sortAnaliticsByDate (type, field, idForField, data, user) {
+    console.log(user)
     console.log({
       ...data
     })
@@ -368,6 +369,7 @@ class MainService {
   }
 
   async getAnaliticsInfoByDate ({ type, userId, comandId, unitMonth }) {
+
     const user = await User.findById(userId)
     const comand = await CommandOfSale.findById(comandId)
 
@@ -511,6 +513,7 @@ class MainService {
 
   async getAnaliticsUserInfoByDate ({ type, userId, unitMonth }) {
     try {
+      console.log(11111)
       const user = await User.findById(userId)
 
       if (type === 'TODAY') {
@@ -552,7 +555,7 @@ class MainService {
         yesterday.setDate(yesterday.getDate() - 1)
 
         const result = await this.sortAnaliticsByDate(0, 'userId', user._id,
-          { from: formatToISOFromat(yesterday), to: formatToISOFromat(now) })
+          { from: formatToISOFromat(yesterday), to: formatToISOFromat(now) }, user)
 
         return {
           clients: result['clients'],
@@ -574,7 +577,7 @@ class MainService {
         weekEnd.setDate(weekEnd.getDate() + 7)
 
         const result = await this.sortAnaliticsByDate(0, 'userId', user._id,
-          { from: formatToISOFromat(weekStart), to: formatToISOFromat(weekEnd) })
+          { from: formatToISOFromat(weekStart), to: formatToISOFromat(weekEnd) },user)
 
         return {
           clients: result['clients'],
@@ -593,7 +596,7 @@ class MainService {
         monthEnd.setDate(monthEnd.getMonth() === 1 ? monthEnd.getDate() + 27 : monthEnd.getDate() + 30)
 
         const result = await this.sortAnaliticsByDate(0, 'userId', user._id,
-          { from: formatToISOFromat(monthStart), to: formatToISOFromat(monthEnd) })
+          { from: formatToISOFromat(monthStart), to: formatToISOFromat(monthEnd) },user)
 
         return {
           clients: result['clients'],
