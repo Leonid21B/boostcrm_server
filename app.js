@@ -111,6 +111,8 @@ app.use('/api/adminka',companiesAdmin)
 const startServer = async () => {
   try {
     await mongoose.connect(process.env.DB_URI)
+      checkDate.check()
+      checkDate.checkProb()
       setInterval(() => {
         checkDate.check()
         checkDate.checkProb()
