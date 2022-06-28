@@ -8,13 +8,24 @@ import { Stage } from "../models/stage.js"
 import {User} from "../models/user.js"
 
 class CheckDate {
+  async checkStages(){
+    const user = await User.find({email:'lyonya23@gmail.com'})
+    const stages = await Stage.find({userId:user._id})
+    console.log(stages)
+    return
+  }
   async checkProb(){
     try{
       const companies = await Company.find()
       let filtCompanies = companies.filter(it => {
+        
         const dateAdd = new Date(it.createdAt)
         const dateNow = new Date()
         const datePaym = new Date(it.paymentDate)
+        console.log(dateAdd)
+        console.log(datePaym)
+        console.log(datePaym.getTime() - dateAdd.getTime())
+        console.log(1000 * 60 * 60 * 11 * 24)
         if(datePaym.getTime() - dateAdd.getTime() <= 1000 * 60 * 60 * 11 * 24  && datePaym.getTime() - dateNow.getTime() < 0){
           return true
         }else{

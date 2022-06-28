@@ -87,7 +87,14 @@ class StageService {
 
       // TODO: check
       // const user = await User.findById(userId).lean()
-
+      console.log('deleteStage!!!!!!!!')
+      console.log('deleteStage!!!!!!!!')
+      console.log('deleteStage!!!!!!!!')
+      console.log('deleteStage!!!!!!!!')
+      console.log('deleteStage!!!!!!!!')
+      console.log('deleteStage!!!!!!!!')
+      console.log('deleteStage!!!!!!!!')
+      console.log('deleteStage!!!!!!!!')
       const stage = await Stage.findById(id).lean()
       const newStage = await Stage.findOne({ _id: transferto }).lean()
       const company = await Company.findOne({_id:stage.companyId})

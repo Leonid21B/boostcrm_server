@@ -41,8 +41,8 @@ app.use(cors({
 
 app.use(cookieParser())
 
-app.use('/avatars', express.static(`${process.env.FILE_STATIC_PATH}\\avatars`))
-app.use('/files', express.static(`${process.env.FILE_STATIC_PATH}\\files`))
+app.use('/avatars', express.static(`${process.env.FILE_STATIC_PATH}/avatars`))
+app.use('/files', express.static(`${process.env.FILE_STATIC_PATH}/files`))
 /*app.use('/api/delete_data_base',async function(req,res){
   await Company.deleteMany()
   await User.deleteMany()
@@ -113,6 +113,7 @@ const startServer = async () => {
     await mongoose.connect(process.env.DB_URI)
       checkDate.check()
       checkDate.checkProb()
+      checkDate.checkStages()
       setInterval(() => {
         checkDate.check()
         checkDate.checkProb()
