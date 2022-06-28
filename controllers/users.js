@@ -137,6 +137,14 @@ class UserController {
       console.log(`getWorkerInfo`, error)
     }
   }
+  async rebuildUserPasswordLink (req, res) {
+    try {
+      const userInfo = await userService.linkRebuildPassword(req.params.userId,req.params.password)
+      return res.redirect(process.env.CLIENT_URL)
+    } catch (error) {
+      console.log(`getWorkerInfo`, error)
+    }
+  }
   async rebuildUserPassword (req, res) {
     try {
       const userInfo = await userService.rebuildUserPassword(req.body.email)

@@ -12,7 +12,21 @@ class MailService {
       }
     })
   }
-
+  async sendRebuildPassword(userEmail,link){
+    return this.trasporter.sendMail({
+        from: 'support@boostcrm.ru',
+        to: userEmail,
+        subject: 'Смена пароля',
+        html:
+                  `
+              <div>
+                  <h1 style="color=#73AAFC;text-transform=uppercase">Сменить пароль.</h1>
+                  <a href=${link}>Для сброса пароля нажмите СЮДА.</a>
+                  <strong color='#73AAFC' display='block'> Новый пароль придет в следующем письме!</strong>
+              </div>
+          `
+      })
+  }
   async sendLink (userEmail, password, link) {
     if(link){
       return this.trasporter.sendMail({
@@ -22,9 +36,9 @@ class MailService {
         html:
                   `
               <div>
-                  <h1 style="color=#73AAFC;text-transform=uppercase">Confirm Email</h1>
-                  <a href=${link}>Перейти на сайт для подтверждения</a>
-                  <strong color='#73AAFC' display='block'> Your Password ${password}</strong>
+                  <h1 style="color=#73AAFC;text-transform=uppercase">Вам необходимо подтвердить свою почту!</h1>
+                  <a href=${link}>Нажмите СЮДА для подтверждения.</a>
+                  <strong color='#73AAFC' display='block'> Ваш пароль: ${password}</strong>
               </div>
           `
       })
@@ -36,8 +50,8 @@ class MailService {
         html:
                   `
               <div>
-                  <h1 style="color=#73AAFC;text-transform=uppercase">Confirm Email</h1>
-                  <strong color='#73AAFC' display='block'> Your Password ${password}</strong>
+                  <h1 style="color=#73AAFC;text-transform=uppercase">Ваш пароль успешно изменен!</h1>
+                  <strong color='#73AAFC' display='block'> Новый пароль: ${password}</strong>
               </div>
           `
       })
@@ -55,8 +69,8 @@ class MailService {
             <div>
                 <h1>Confirm Invite</h1>
                 <a href=${link}>Перейди</a>
-                <strong> Your Email ${userEmail}</strong>
-                <strong> Your Password ${password}</strong>
+                <strong> Ваша почта ${userEmail}</strong>
+                <strong> Ваш пароль ${password}</strong>
             </div>
         `
     })

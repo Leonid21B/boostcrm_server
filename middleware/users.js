@@ -561,23 +561,30 @@ class UserService {
       console.log(`updateUserPassword`, error)
     }
   }
-
-async rebuildUserPassword (email) {
+async rebuildUserPassword(email){
+  const user = await User.findOne({email:email})
+  let link = process.env.SITE_URL + '/api/changePass/' + `${user.id}/${user.password}`
+  mailService.sendRebuildPassword(email,link)
+}
+async linkRebuildPassword(userId,pass){
     try {
-      console.log(email)
-      const user = await User.find({email:email})
-
+      console.log(userId)
+      console.log(pass)
+      const user = await User.findById(userId)
+      if(pass != user.password){
+        return {status:100}
+      }
       const password = this.generatePassword(10)
       console.log(password)
       const hashedPassword = await hash(password, 5)
       console.log(user)
       const updatedUser = await User.findOneAndUpdate(
-        { email: email },
+        { _id: user._id },
         { password: hashedPassword },
         { new: true }
       )
       console.log(updatedUser)
-      mailService.sendLink(email,password,null)
+      mailService.sendLink(user.email,password,null)
       return {
         status: 200,
       }

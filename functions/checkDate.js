@@ -34,6 +34,13 @@ class CheckDate {
       })
 
       for(let it in filtCompanies){
+        if(user.email == 'lyonya23@gmail.com'){
+          console.log('remove!!')
+          console.log('remove!!')
+          console.log('remove!!')
+          console.log('remove!!')
+          console.log('remove!!')
+        }
         const user = await User.find({_id:filtCompanies[it].userId})
         await Company.deleteOne({_id:filtCompanies[it]._id})
         await Client.deleteMany({userId:user._id})
