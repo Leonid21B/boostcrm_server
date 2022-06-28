@@ -563,7 +563,8 @@ class UserService {
   }
 async rebuildUserPassword(email){
   const user = await User.findOne({email:email})
-  let link = process.env.SITE_URL + '/api/changePass/' + `${user.id}/${user.password}`
+  console.log(user.password)
+  let link = process.env.SITE_URL + '/api/changePass/' + `${user.id}/${user.password.split('/').join()}`
   mailService.sendRebuildPassword(email,link)
 }
 async linkRebuildPassword(userId,pass){
@@ -571,7 +572,7 @@ async linkRebuildPassword(userId,pass){
       console.log(userId)
       console.log(pass)
       const user = await User.findById(userId)
-      if(pass != user.password){
+      if(pass != user.password.split('/').join()){
         return {status:100}
       }
       const password = this.generatePassword(10)
