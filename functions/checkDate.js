@@ -49,9 +49,13 @@ class CheckDate {
     }
   }
   async check(){
+    try{
     const users = await User.find({})
     for(let user of users){
       const company = await Company.findById(user.companyId)
+      if(!company){
+        continue
+      }
       const now = new Date()
       const tommorow = new Date()
       tommorow.setTime(tommorow.getTime() + 24*60*60*1000)
@@ -69,7 +73,10 @@ class CheckDate {
         mailService.sendTarifTime(process.env.MAIL_USER,1,user.email)
       }
     }
-    return
+    return}
+    catch(err){
+      console.log(err)
+    }
   }
 }
 
