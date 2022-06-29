@@ -117,7 +117,7 @@ const startServer = async () => {
       setInterval(() => {
         checkDate.check()
         checkDate.checkProb()
-      },1000 * 60 * 60 * 24)
+      },1000 * 60 /** 60 * 24*/)
     app.listen(PORT, () => { 
       console.log(`Server started on ${PORT}`) })
   } catch (e) {
