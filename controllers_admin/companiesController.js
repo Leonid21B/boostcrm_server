@@ -200,6 +200,7 @@ class CompaniesController{
       await newTask.deleteMany({companyId:idComp})
       await User.deleteMany({companyId:idComp})
       await Company.findByIdAndDelete(req.params.companyId)
+      console.log('deletedCompany')
       return res.json(true)
     }catch(err){
       console.log(err)

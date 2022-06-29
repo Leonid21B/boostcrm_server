@@ -50,7 +50,7 @@ class CheckDate {
         await newTask.deleteMany({userId:user._id})
         await Stage.deleteMany({companyId : filtCompanies[it]._id})
         await User.deleteMany({companyId:filtCompanies[it]._id})
-        console.log(filtCompanies[it]._id, 'deleted')
+        console.log(filtCompanies[it].email, 'deleted')
       }
     }catch(err){
       console.log(err)
