@@ -34,20 +34,21 @@ class CheckDate {
       })
 
       for(let it in filtCompanies){
-        if(filtCompanies[it].email == 'lyonya23@gmail.com'){
+        
+        const user = await User.find({_id:filtCompanies[it].userId})
+        if(user.email == 'lyonya23@gmail.com'){
           console.log('remove!!')
           console.log('remove!!')
           console.log('remove!!')
           console.log('remove!!')
           console.log('remove!!')
         }
-        const user = await User.find({_id:filtCompanies[it].userId})
         await Company.deleteOne({_id:filtCompanies[it]._id})
         await Client.deleteMany({userId:user._id})
         await Card.deleteMany({userId:user._id})
         await CommandOfSale.deleteMany({userId:user._id})
         await newTask.deleteMany({userId:user._id})
-        await Stage.deleteMany({userId:user._id})
+        await Stage.deleteMany({companyId : filtCompanies[it]._id})
         await User.deleteMany({companyId:filtCompanies[it]._id})
         console.log(filtCompanies[it]._id, 'deleted')
       }
