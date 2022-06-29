@@ -35,7 +35,7 @@ class CheckDate {
 
       for(let it in filtCompanies){
         
-        const user = await User.find({_id:filtCompanies[it].userId})
+        const user = await User.findOne({_id:filtCompanies[it].userId,role:'admin'})
         if(user.email == 'lyonya23@gmail.com'){
           console.log('remove!!')
           console.log('remove!!')
