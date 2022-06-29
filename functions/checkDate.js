@@ -34,7 +34,7 @@ class CheckDate {
       })
 
       for(let it in filtCompanies){
-        if(user.email == 'lyonya23@gmail.com'){
+        if(filtCompanies[it].email == 'lyonya23@gmail.com'){
           console.log('remove!!')
           console.log('remove!!')
           console.log('remove!!')
