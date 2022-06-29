@@ -16,9 +16,8 @@ class CheckDate {
   }
   async checkProb(){
     try{
-      const stages = await Stage.find({})
-      console.log(stages)
       const companies = await Company.find()
+      console.log(companies)
       let filtCompanies = companies.filter(it => {
         
         const dateAdd = new Date(it.createdAt)
@@ -34,9 +33,8 @@ class CheckDate {
           return false
         }
       })
-
+      console.log(filtCompanies) 
       for(let it in filtCompanies){
-        
         const user = await User.findOne({_id:filtCompanies[it].userId,role:'admin'})
         if(user.email == 'lyonya23@gmail.com'){
           console.log('remove!!')
