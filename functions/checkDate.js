@@ -16,6 +16,8 @@ class CheckDate {
   }
   async checkProb(){
     try{
+      const stages = await Stage.find({})
+      console.log(stages)
       const companies = await Company.find()
       let filtCompanies = companies.filter(it => {
         
