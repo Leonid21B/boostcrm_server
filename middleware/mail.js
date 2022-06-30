@@ -21,7 +21,7 @@ class MailService {
                   `
               <div>
                   <h1 style="color=#73AAFC;text-transform=uppercase">Сменить пароль.</h1>
-                  <a href=${link}>Для сброса пароля нажмите СЮДА.</a>
+                  <a target="_blank" href=${link}>Для сброса пароля нажмите СЮДА.</a>
                   <strong color='#73AAFC' display='block'> Новый пароль придет в следующем письме!</strong>
               </div>
           `
@@ -37,7 +37,7 @@ class MailService {
                   `
               <div>
                   <h1 style="color=#73AAFC;text-transform=uppercase">Вам необходимо подтвердить свою почту!</h1>
-                  <a href=${link}>Нажмите СЮДА для подтверждения.</a>
+                  <a target="_blank" href=${link}>Нажмите СЮДА для подтверждения.</a>
                   <strong color='#73AAFC' display='block'> Ваш пароль: ${password}</strong>
               </div>
           `
@@ -68,7 +68,7 @@ class MailService {
                 `
             <div>
                 <h1>Confirm Invite</h1>
-                <a href=${link}>Перейди</a>
+                <a target="_blank" href=${link}>Перейди</a>
                 <strong> Ваша почта ${userEmail}</strong>
                 <strong> Ваш пароль ${password}</strong>
             </div>
