@@ -37,8 +37,10 @@ class MailService {
                   `
               <div>
                   <h1 style="color=#73AAFC;text-transform=uppercase">Вам необходимо подтвердить свою почту!</h1>
-                  <a target="_blank" href=${link}>Нажмите СЮДА для подтверждения.</a>
-                  <strong color='#73AAFC' display='block'> Ваш пароль: ${password}</strong>
+                  <div display='block'>
+                    <a target="_blank" href=${link}>Нажмите СЮДА для подтверждения.</a>
+                    <strong color='#73AAFC' display='block'> Ваш пароль: ${password}</strong>
+                  </div>
               </div>
           `
       })

@@ -8,6 +8,7 @@ import cardsRouter from './routes/cards.js'
 import stagesRouter from './routes/stages.js'
 import tasksRouter from './routes/tasks.js'
 import fieldsRouter from './routes/fields.js'
+import postRouter from './routes/post.js'
 import clientsRouter from './routes/clients.js'
 import usersRouter from './routes/users.js'
 import commandsRouter from './routes/commands.js'
@@ -24,6 +25,9 @@ import { Field } from './models/newField.js'
 import { CommandOfSale } from './models/commandOfSale.js'
 import { Client } from './models/client.js'
 import { Card } from './models/card.js'
+import {Post} from './models/post.js'
+import {Item} from './models/item.js'
+import {ObjectText} from './models/objectText.js'
 
 dotenv.config()
 
@@ -95,6 +99,9 @@ app.use('/api/checkPayment', async function (req, res, next) {
   }
   return res.redirect(`${process.env.CLIENT_URL}`)
 })
+app.use('/api/blog',postRouter)
+app.use('/api/adminka',authAdmin)
+app.use('/api/adminka',companiesAdmin)
 
 app.use('/api', cardsRouter)
 app.use('/api', stagesRouter)
@@ -105,8 +112,7 @@ app.use('/api', usersRouter)
 app.use('/api', commandsRouter)
 app.use('/api', mainRouter)
 
-app.use('/api/adminka',authAdmin)
-app.use('/api/adminka',companiesAdmin)
+
 
 const startServer = async () => {
   try {

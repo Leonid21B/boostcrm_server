@@ -6,37 +6,61 @@ const generateJwt = (acc,ref) => {
   const refreshToken = jwt.sign({ref}, process.env.REFRESH_TOKEN_KEY, { expiresIn: '1h' })
   return { accsessToken, refreshToken }
 }
-
+const validateErrors = async(token,secret) => {
+  try{
+    const verify_token = jwt.verify(token,secret)
+    if(!verify_token || verify_token.exp - verify_token.iat <= 0){
+      return false
+    }
+    return verify_token
+  }catch(err){
+    console.log('controlled_token_error')
+    return false
+  }
+}
 const validCookies = async (acces,refresh) => {
   console.log(acces,refresh)
-  const verify_access = jwt.verify(acces,process.env.ACCESS_TOKEN_KEY)
-  const verify_refresh = jwt.verify(refresh,process.env.REFRESH_TOKEN_KEY)
-  console.log(verify_access)
-  console.log(verify_refresh)
-  const isAcc = await bcrypt.compare(process.env.SECRET_KEY_FOR_ADMIN,verify_access.acc)
-  const isRef = await bcrypt.compare(process.env.SECRET_KEY_FOR_ADMIN,verify_refresh.ref)
-  console.log(isAcc)
-  console.log(isRef)
-  if(!isAcc && !isRef|| verify_access.exp - verify_access.iat <= 0 && verify_refresh.exp - verify_refresh.iat <= 0){
+  const verify_access = await validateErrors(acces,process.env.ACCESS_TOKEN_KEY)
+  const verify_refresh = await validateErrors(refresh,process.env.REFRESH_TOKEN_KEY)
+  if(verify_access && verify_refresh){
+    const isAcc = await bcrypt.compare(process.env.SECRET_KEY_FOR_ADMIN,verify_access.acc)
+    const isRef = await bcrypt.compare(process.env.SECRET_KEY_FOR_ADMIN,verify_refresh.ref)
+    if(isAcc && isRef){
+      return 2
+    }
+    if(!isAcc && isRef){
+      return 1
+    }
     return 0
   }
-  if(!isAcc && isRef || verify_access.exp - verify_access.iat <= 0 && verify_refresh.exp - verify_refresh.iat > 0){
+  if(!verify_access && verify_refresh){
+    const isRef = await bcrypt.compare(process.env.SECRET_KEY_FOR_ADMIN,verify_refresh.ref)
+    if(!isRef){
+      return 0
+    }
     return 1
   }
-  if(isAcc && isRef){
-    return 2
-  }
+  console.log(verify_access)
+  console.log(verify_refresh)
+  
+  console.log(isAcc)
+  console.log(isRef)
+  return 0
   
 }
 
 class AuthController {
   async checkAuth(req,res,next){
     try{
-      if(!req.cookies['admin_refresh-token'] || !req.cookies['admin_access-token']){
+
+      let access = req.cookies['admin_access-token']
+      const refresh = req.cookies['admin_refresh-token']
+      if(!refresh){
         return res.json(false)
       }
-      const access = req.cookies['admin_access-token']
-      const refresh = req.cookies['admin_refresh-token']
+      if(!access){
+        access = null
+      }
       const code = await validCookies(access,refresh)
       console.log(code)
       if(code === 0){
