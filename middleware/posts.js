@@ -233,7 +233,7 @@ class PostsService{
         const post = await Post.findById(postId)
         
         const name = `${v1()}.jpg`
-        const fullPath = `${process.env.FILE_STATIC_PATH}/posts`
+        const fullPath = `${process.env.FILE_STATIC_PATH}/files/posts`
         
         if (!fs.existsSync(fullPath)) {
             fs.mkdirSync(fullPath)
@@ -325,7 +325,7 @@ class PostsService{
       console.log(JSON.parse(value))
       console.log(objectId)
       const name = `${v1()}.jpg`
-      const fullPath = `${process.env.FILE_STATIC_PATH}/values`
+      const fullPath = `${process.env.FILE_STATIC_PATH}/files/values`
       if (!fs.existsSync(fullPath)) {
           fs.mkdirSync(fullPath)
         }
