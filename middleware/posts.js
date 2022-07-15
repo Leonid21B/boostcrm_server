@@ -1,6 +1,8 @@
 import { Item } from "../models/item.js"
 import { Post } from "../models/post.js"
 import {ObjectText} from '../models/objectText.js'
+import fs from 'fs'
+import { v1 } from "uuid"
 
 const postDto = (post) => {
   return{
@@ -23,7 +25,7 @@ const itemDto = (item) => {
 const objectDto = (object) => {
   return{
     type:object.type,
-    valuet:object.value,
+    value:object.value,
     id: object.id,
     postId:object.PostId,
     itemId:object.itemId
@@ -33,7 +35,7 @@ class PostsService{
   async createPost(){
     try{
       const post = await Post.create({zag:'Новый пост'})
-      return post
+      return {post:postDto(post)}
     }catch(err){
       console.log(err)
       return false
@@ -42,17 +44,30 @@ class PostsService{
   }
   async createItem({postId,zag = 'Новый блок',position = null}){
     try{
+      let newZag = zag
+      if(zag == null){
+        newZag = 'Новый блок'
+      }
+      console.log(postId)
       const post = await Post.findById(postId)
       if(!post){
         return false
       }
       let arrItems = [...post.items]
-      const item = await Item.create({PostId:postId,zag:zag})
+      const item = await Item.create({PostId:postId,zag:newZag})
       if(!position){
         arrItems.push(item._id)
+      }else{
+        let leftArr = arrItems.slice(0,position + 1)
+        let rightArr = arrItems.slice(position + 1)
+        arrItems = [...leftArr, item._id]
+        arrItems = [...arrItems,...rightArr]
       }
       await Post.findByIdAndUpdate(postId,{items:arrItems})
-      return item
+      const resPost = await Post.findById(postId)
+      return {
+        post:postDto(resPost)
+      }
     }catch(err){
       console.log(err)
       return false
@@ -63,18 +78,29 @@ class PostsService{
       if(!Array.isArray(content)){
         return false
       }
-      const item = await Item.findById(itemId)
+      let item = await Item.findById(itemId)
       const post = await Post.findOne({_id: item.PostId})
       if(!item || !post){
         return false
       }
       const object = await ObjectText.create({PostId:post._id, itemId: item._id,type:type,value:[...content]})
       let arrItems = [...item.objects]
-      if(!position){
+      if(!position && position !== 0){
         arrItems.push(object._id)
+      }else{
+        let leftArr = arrItems.slice(0,position + 1)
+        let rightArr = arrItems.slice(position + 1)
+        arrItems = [...leftArr, object._id]
+        arrItems = [...arrItems,...rightArr]
       }
       await Item.findByIdAndUpdate(itemId,{objects:arrItems})
-      return object
+      item = await Item.findById(itemId)
+      let resItem = itemDto(item)
+      for(let obj of item.objects){
+        const object = await ObjectText.findOne({_id: obj})
+        resItem.objects.push(objectDto(object))
+      }
+      return {item : resItem}
     }catch(err){
       console.log(err)
       return false
@@ -106,6 +132,7 @@ class PostsService{
   async deleteItem({itemId}){
     try{
       const item = await Item.findById(itemId)
+      console.log('delete ', itemId)
       if(!item){
         return false
       }
@@ -149,68 +176,28 @@ class PostsService{
       return false
     }
   }
-  async moveItem({itemId,position}){
+  async moveItem({postId,array}){
     try{
-      const item = await Item.findById(itemId)
-      const post = await Post.findOne({_id:item.PostId})
-      if(position >= post.items.length || position < 0){
-        console.log('position_error')
-        return false
-      }
-      let array = [...post.items]
-      let leftArr = array.slice(0,position)
-      let rightArr = array.slice(position,array.length)
-      for(let it in leftArr){
-        const itm = await Item.findOne({_id:leftArr[it]})
-        if(itm.id == item.id){
-          leftArr.splice(it,1)
-        }
-      }
-      for(let it in rightArr){
-        const itm = await Item.findOne({_id:rightArr[it]})
-        if(itm.id == item.id){
-          rightArr.splice(it,1)
-        }
-      }
       let newArr = []
-      newArr = [...leftArr]
-      newArr.push(item._id)
-      newArr = [...newArr,rightArr]
-      await Post.findOneAndUpdate({_id:post._id},{items:newArr})
+      for (let it of array){
+        const item = await Item.findById(it)
+        newArr.push(item._id)
+      }
+      await Post.findByIdAndUpdate(postId,{items:newArr})
       return true
     }catch(err){
       console.log(err)
       return false
     }
   }
-  async moveObject({objectId,position}){
+  async moveObject({itemId,array}){
     try{
-      const object = await ObjectText.findById(objectId)
-      const item = await Item.findOne({_id:object.itemId})
-      if(position >= item.objects.length || position < 0){
-        console.log('position_error')
-        return false
-      }
-      let array = [...item.objects]
-      let leftArr = array.slice(0,position)
-      let rightArr = array.slice(position,array.length)
-      for(let it in leftArr){
-        const obj = await ObjectText.findOne({_id:leftArr[it]})
-        if(obj.id == object.id){
-          leftArr.splice(it,1)
-        }
-      }
-      for(let it in rightArr){
-        const obj = await ObjectText.findOne({_id:rightArr[it]})
-        if(obj.id == object.id){
-          rightArr.splice(it,1)
-        }
-      }
       let newArr = []
-      newArr = [...leftArr]
-      newArr.push(object._id)
-      newArr = [...newArr,rightArr]
-      await Item.findOneAndUpdate({_id:item._id},{objects:newArr})
+      for (let it of array){
+        const obj = await ObjectText.findById(it)
+        newArr.push(obj._id)
+      }
+      await Item.findByIdAndUpdate(itemId,{objects:newArr})
       return true
     }catch(err){
       console.log(err)
@@ -239,28 +226,67 @@ class PostsService{
       return false
     }
   }
-  async changePost({postId,zag,startedText}){
+  async changePost({postId,zag,startedText,arrItems},file){
     try{
-      if(startedText){
+      console.log({postId,zag:zag,startedText:startedText,arrItems},file)
+      if(file){
+        const post = await Post.findById(postId)
+        
+        const name = `${v1()}.jpg`
+        const fullPath = `${process.env.FILE_STATIC_PATH}/posts`
+        
+        if (!fs.existsSync(fullPath)) {
+            fs.mkdirSync(fullPath)
+        }
+        if(fs.existsSync(fullPath + '/' + post.imgref) && post.imgref){
+          fs.unlinkSync(fullPath + '/' + post.imgref)
+        }
+        file.mv(`${fullPath}/${name}`)
+        await Post.findByIdAndUpdate(postId,{imgref:name})
+      }
+      if(startedText && startedText != 'null'){
         await Post.findByIdAndUpdate(postId,{startedText:startedText})
       }
-      if(zag){
+      if(zag && zag != 'null'){
         await Post.findByIdAndUpdate(postId,{zag:zag})
       }
+      if(arrItems && arrItems != 'null'){
+        let newArr = []
+        let copyArr = JSON.parse(arrItems)
+        for (let it of copyArr){
+          const item = await Item.findById(it)
+          newArr.push(item._id)
+        }
+        await Post.findByIdAndUpdate(postId,{items:newArr})
+      }
       const post = await Post.findById(postId)
-      return {post: postDto(post)}
+      return postDto(post)
     }catch(err){
       console.log(err)
       return false
     }
   }
-  async changeItem({itemId,zag}){
+  async changeItem({itemId,zag,arrObjects = []}){
     try{
       if(zag){
         await Item.findByIdAndUpdate(itemId,{zag:zag})
       }
+      console.log(arrObjects)
+      if(arrObjects != [] && arrObjects){
+        let resArrObj = []
+        for(let ob of arrObjects){
+          const object = await ObjectText.findById(ob)
+          resArrObj.push(object._id)
+        }
+        await Item.findByIdAndUpdate(itemId,{objects:resArrObj})
+      }
       const item = await Item.findById(itemId)
-      return {item: itemDto(item)}
+      let resItem = itemDto(item)
+      for (let obj in item.objects){
+        const object = await ObjectText.findOne({_id:item.objects[obj]})
+        resItem.objects.push(objectDto(object))
+      }
+      return {item: resItem}
     }catch(err){
       console.log(err)
       return false
@@ -286,6 +312,63 @@ class PostsService{
         arrPosts.push(postDto(post))
       }
       return {posts: arrPosts}
+    }catch(err){
+      console.log(err)
+      return false
+    }
+  }
+
+  async uploadFileValue({objectId,value = ['new']},file){
+    try{
+      console.log(file)
+      console.log(value)
+      console.log(JSON.parse(value))
+      console.log(objectId)
+      const name = `${v1()}.jpg`
+      const fullPath = `${process.env.FILE_STATIC_PATH}/values`
+      if (!fs.existsSync(fullPath)) {
+          fs.mkdirSync(fullPath)
+        }
+      file.mv(`${fullPath}/${name}`)
+      let resObject = [...JSON.parse(value)]
+      for(let it in resObject){
+        if(resObject[it] === 'new'){
+          resObject[it] = '/' + name
+        }
+      }
+      const object = await ObjectText.findByIdAndUpdate(objectId,{value:resObject},{new:true})
+      return objectDto(object)
+    }catch(err){
+      console.log(err)
+      return false
+    }
+  }
+  async deleteValues({objectId,array}){
+    try{
+      console.log(objectId,array)
+      const fullPath = `${process.env.FILE_STATIC_PATH}/values`
+      let resArr = [...array]
+      const object = await ObjectText.findById(objectId)
+      let delArr = [] 
+      let resultArr = []
+      resArr.forEach((it,ind) => {
+        if(it == 'deleted'){
+          delArr.push(object.value[ind])
+        }else{
+          resultArr.push(it)
+        }
+      })
+  
+      const resObject = await ObjectText.findByIdAndUpdate(objectId,{value:resultArr},{new:true})
+      for (let it of delArr){
+        if( object.type === 'img' && fs.existsSync(it)){
+          fs.unlinkSync(it)
+        }
+      }
+
+      return {
+        object: objectDto(resObject)
+      }
     }catch(err){
       console.log(err)
       return false

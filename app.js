@@ -47,6 +47,8 @@ app.use(cookieParser())
 
 app.use('/avatars', express.static(`${process.env.FILE_STATIC_PATH}/avatars`))
 app.use('/files', express.static(`${process.env.FILE_STATIC_PATH}/files`))
+app.use('/posts', express.static(`${process.env.FILE_STATIC_PATH}/posts`))
+app.use('/values', express.static(`${process.env.FILE_STATIC_PATH}/values`))
 /*app.use('/api/delete_data_base',async function(req,res){
   await Company.deleteMany()
   await User.deleteMany()

@@ -23,8 +23,8 @@ const validCookies = async (acces,refresh) => {
   const verify_access = await validateErrors(acces,process.env.ACCESS_TOKEN_KEY)
   const verify_refresh = await validateErrors(refresh,process.env.REFRESH_TOKEN_KEY)
   if(verify_access && verify_refresh){
-    const isAcc = await bcrypt.compare(process.env.SECRET_KEY_FOR_ADMIN,verify_access.acc)
-    const isRef = await bcrypt.compare(process.env.SECRET_KEY_FOR_ADMIN,verify_refresh.ref)
+    const isAcc =  bcrypt.compare(process.env.SECRET_KEY_FOR_ADMIN,verify_access.acc)
+    const isRef =  bcrypt.compare(process.env.SECRET_KEY_FOR_ADMIN,verify_refresh.ref)
     if(isAcc && isRef){
       return 2
     }
@@ -34,7 +34,7 @@ const validCookies = async (acces,refresh) => {
     return 0
   }
   if(!verify_access && verify_refresh){
-    const isRef = await bcrypt.compare(process.env.SECRET_KEY_FOR_ADMIN,verify_refresh.ref)
+    const isRef = bcrypt.compare(process.env.SECRET_KEY_FOR_ADMIN,verify_refresh.ref)
     if(!isRef){
       return 0
     }
