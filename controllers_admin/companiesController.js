@@ -50,11 +50,16 @@ const addAdmin = (obj,value) => {
 class CompaniesController{
   async getCompanies(req,res,next){
     try{
+     
       const limit = req.params.limit
       const page = req.params.page
+      console.log(limit,page)
+      
       const companiesAll = await Company.find({})
-      const sortedByDate = companiesAll.sort((a,b) => {a.paymentDate - b.paymentDate})
-      const sortedByClients  = companiesAll.sort((a,b) => {a.clients.length - b.clients.length})
+      let sortedByDate = [...companiesAll]
+      let sortedByClients = [...companiesAll]
+      sortedByDate =  sortedByDate.sort((a,b) => { return new Date(a.paymentDate).getTime() - new Date(b.paymentDate).getTime()})
+      sortedByClients = sortedByClients.sort((a,b) => {return a.clients.length - b.clients.length})
       let resDate = [...sortedByDate.slice((page-1) * limit,page * limit)]
       for (let it in resDate){
         const user = await User.findOne({companyId:resDate[it].id, role:'admin'})
